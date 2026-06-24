@@ -176,6 +176,20 @@
       margin-bottom: 0;
     }
 
+    ul {
+      margin: 0 0 16px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -283,6 +297,102 @@
       font-size: 11.5px;
     }
 
+    .bug-group {
+      margin-bottom: 28px;
+    }
+
+    .bug-group h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .bug-item {
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: #fafbfc;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .bug-item .bug-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .bug-item .bug-id {
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--navy);
+    }
+
+    .bug-item .bug-loc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bug-item p {
+      margin-bottom: 8px;
+      font-size: 13.5px;
+    }
+
+    .bug-item p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bug-item strong {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .solution-item {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--cyan);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: #fff;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .solution-item .maps-to {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .solution-item p {
+      margin-bottom: 8px;
+      font-size: 13.5px;
+    }
+
+    .solution-item p:last-child {
+      margin-bottom: 0;
+    }
+
+    .vision-block {
+      border: 1px solid var(--border);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      background: #fafbfc;
+    }
+
+    .vision-block h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--navy);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
     .closing {
       margin-top: 44px;
       padding-top: 28px;
@@ -363,42 +473,26 @@
       <div class="owner-summary" id="owner-summary">
         <div class="tag">Summary for owners</div>
         <p>
-          You already have a live ordering channel that most shower screen suppliers do not offer: builders can price
-          and submit from site on their phone. That is real competitive ground. What holds it back is not the idea but
-          the backend: orders can disappear if email fails, the dashboard does not retain builders, and staff still
-          carry the weight of manual follow-up. I recommend evolving what exists in controlled releases: ship
-          registration and verified data storage first, then make every order permanent server-side, then connect AroFlo
-          so jobs enter your workflow without re-keying. The prototype becomes a revenue asset, not a liability, without
-          the cost and risk of starting over.
-        </p>
-      </div>
-
-      <div class="business-callout">
-        <div class="tag">Why this matters commercially</div>
-        <p>
-          Every builder who opens this app and gets a price in seconds is a builder who did not call your competitor
-          first. Every order that lands only in an inbox is a job that can be lost, misread, or delayed. The hard work
-          is already done: live pricing, screen configuration, branded emails, and a deployed URL. What HSSS needs now
-          is one accountable technical owner to turn that into a system the business can depend on and grow through.
-          That is the gap this engagement closes.
+          The live app already delivers on-site pricing and order intake for four screen types. The gaps are in
+          persistence, dashboard completeness, and registration deployment. I recommend extending the current codebase
+          in phased releases: stabilize ordering and ship registration with a verified database layer, persist every
+          order server-side, then connect AroFlo. A rewrite is not required.
         </p>
       </div>
 
       <section>
-        <h2>Business stake: what is on the table</h2>
+        <h2>Current position</h2>
         <p>
-          This is not a software vanity project. It is a direct extension of how HSSS wins and keeps builder work.
-          Builders buy on speed and certainty at the job site. Your team sells on quality install and reliable supply.
-          The app sits exactly at that intersection. When it works properly, it shortens the path from measurement to
-          confirmed order. When it does not, builders revert to phone calls, and your sales team absorbs work the app
-          was meant to remove.
+          HSSS has a deployed URL, a working pricing engine, screen configurators, branded order emails, and registration
+          code that is written but not yet released with a versioned database schema. AroFlo API integration exists at
+          prototype level. I have reviewed the repository and live dashboard and documented findings in the sections below.
         </p>
         <table class="value-table">
           <thead>
             <tr>
               <th>Area</th>
               <th>Today</th>
-              <th>With structured delivery</th>
+              <th>Target state</th>
             </tr>
           </thead>
           <tbody>
@@ -434,57 +528,19 @@
             </tr>
           </tbody>
         </table>
-        <p>
-          The cost of delay is not abstract. Builders who trial the app today see a dashboard that feels unfinished.
-          Two menu items do nothing. There is no sign-out, no name, no status. First impressions stick. Either HSSS
-          fixes that trajectory now with proper ownership, or the app becomes something builders tried once and
-          abandoned while competitors keep the relationship on the phone.
-        </p>
-      </section>
-
-      <section>
-        <h2>Why the timing works in your favour</h2>
-        <p>
-          You are not starting from zero. The live URL is proof to builders that HSSS is serious about digital ordering.
-          The handoff brief shows someone already encoded years of product knowledge into pricing rules and screen
-          logic. Registration and database hooks are written and waiting. AroFlo integration has a working API proxy
-          and documented lessons that would take a new developer weeks to rediscover.
-        </p>
-        <p>
-          A rebuild would burn that advantage and push revenue capture months away. Continuing without a technical lead
-          means more ad hoc changes, more risk to the live app, and no path from prototype to CRM. Bringing in structured
-          ownership now means the next dollar spent on development compounds on what already works instead of replacing it.
-        </p>
-        <div class="leadership-block">
-          <p>
-            <strong>What I bring to this engagement:</strong> a single point of accountability across frontend, database,
-            deployment, and integration. I have already mapped the defects, the undeployed registration work, the CRM gaps,
-            and the phased path to production. I will not need months to understand the codebase before delivering value.
-            The first weeks focus on stabilizing what builders use today and shipping registration safely. Everything after
-            that builds toward a platform HSSS owns outright: your data, your pricing rules, your builder relationships,
-            connected to how you already run jobs in AroFlo.
-          </p>
-          <p>
-            <strong>What HSSS does not need:</strong> another experimental build, a part-time developer patching issues
-            without a release process, or a generic agency that will recommend throwing the app away and quoting six figures
-            for a replacement. You need someone who treats this as your sales infrastructure and runs it accordingly.
-          </p>
-        </div>
       </section>
 
       <section>
         <h2>1. Purpose of this document</h2>
         <p>
-          This report records my assessment of the HSSS builder ordering application after reviewing the live product,
-          the developer handoff brief, and the full source repository. The project was built without a formal software
-          requirements document or a dedicated technical lead. Business rules live in conversation, in the handoff
-          brief, and inside a large single-file React component. That context shapes how I plan to take ownership.
+          This report documents the technical state of the HSSS builder ordering application after reviewing the live
+          product, the developer handoff brief, and the full source repository. There is no formal SRS; the handoff
+          brief and the code are the specification.
         </p>
         <p>
-          I am treating this platform as the front end of a builder relationship management system. Today it handles
-          quoting and order intake. A mature version must also retain customer records, order history, staff workflows,
-          and eventually feed HSSS job management in AroFlo. The gap between the current live app and that target is
-          well understood and addressable without discarding what already works.
+          The platform functions today as an order intake and quoting tool. The target is a builder-facing CRM layer
+          with persisted orders, account history, and a path into AroFlo. That transition can be done on the existing
+          codebase.
         </p>
       </section>
 
@@ -549,11 +605,110 @@
         </table>
         <p>
           The application entry point is <code>AuthWrapper.jsx</code>, which gates access on authentication and a
-          complete builder profile, then renders <code>App.jsx</code>. That file holds roughly 1,700 lines containing
-          every screen builder, the pricing engine, SVG diagrams, and order submission logic. Supporting modules handle
-          email formatting and Supabase hooks for profiles and contacts. A production build completes successfully. The
-          stack is appropriate for this scale. The main structural issue is concentration of logic in one file and
-          absence of server-side order storage.
+          complete builder profile, then renders <code>App.jsx</code>. A production build completes successfully. The
+          stack is appropriate for this scale. Structural and organizational detail is in sections 3.1 to 3.4 below.
+        </p>
+
+        <h3>3.1 Repository layout</h3>
+        <p>
+          The project has six files under <code>src/</code> and two API routes. There are no feature folders, shared
+          component library, migrations directory, or test suite.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Approx. size</th>
+              <th>Responsibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>App.jsx</code></td>
+              <td>~1,720 lines</td>
+              <td>Pricing engine, SVG previews, all order flows, dashboard, ~40 inline components, unused legacy auth screens</td>
+            </tr>
+            <tr>
+              <td><code>AuthWrapper.jsx</code></td>
+              <td>~720 lines</td>
+              <td>Login, signup, profile onboarding, direct Supabase profile reads/writes</td>
+            </tr>
+            <tr>
+              <td><code>useBuilderDB.js</code></td>
+              <td>~260 lines</td>
+              <td>Hooks for builder profile, site contacts, orders (stub)</td>
+            </tr>
+            <tr>
+              <td><code>emailService.js</code></td>
+              <td>~540 lines</td>
+              <td>EmailJS send, HTML templates, separate SVG generators for email diagrams</td>
+            </tr>
+            <tr>
+              <td><code>supabaseClient.js</code></td>
+              <td>6 lines</td>
+              <td>Supabase client (URL and anon key hardcoded)</td>
+            </tr>
+            <tr>
+              <td><code>api/aroflo.js</code></td>
+              <td>Serverless</td>
+              <td>AroFlo HMAC proxy; credentials from environment variables</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3.2 What is sound to build on</h3>
+        <p>
+          Not everything needs replacing. These choices are worth keeping and extending:
+        </p>
+        <ul>
+          <li><strong>Stack:</strong> React 18, Vite, PWA, Supabase, Vercel. Fits the product and team size.</li>
+          <li><strong>Auth boundary:</strong> <code>AuthWrapper</code> renders <code>App</code> only after session and profile are ready. That separation should stay; auth UI should not move back into the order flow file.</li>
+          <li><strong>Data hooks:</strong> <code>useBuilderProfile</code> and <code>useSiteContacts</code> in <code>useBuilderDB.js</code> follow a normal React pattern (fetch, mutate, error state). New entities (orders, quotes) should use the same hook style.</li>
+          <li><strong>Serverless API folder:</strong> <code>api/aroflo.js</code> already keeps third-party secrets off the client. Order submit and AroFlo sync should follow this pattern.</li>
+          <li><strong>Domain logic:</strong> <code>calcPrice()</code>, screen configurators, and measurement validation encode real product rules. The logic is correct to preserve; it needs extraction into importable modules, not a rewrite.</li>
+          <li><strong>Inline UI components:</strong> Small presentational pieces (<code>Btn</code>, <code>MeasurementInput</code>, <code>ColourPicker</code>) are consistent within the app. They should move to a shared folder, not be redesigned.</li>
+        </ul>
+
+        <h3>3.3 What should not continue as-is</h3>
+        <p>
+          These patterns are typical of a rapid prototype. They are not a foundation to keep adding features on top of indefinitely:
+        </p>
+        <ul>
+          <li><strong>Monolithic <code>App.jsx</code>:</strong> Pricing, diagrams, navigation, and every screen in one file makes changes risky and review difficult. New work should not add more inline components here.</li>
+          <li><strong>String-based navigation:</strong> <code>screen</code> state with a large <code>switch</code> block works for a demo but does not scale. Deep links, password reset, and order detail views will need a router or equivalent route table.</li>
+          <li><strong>Split auth implementation:</strong> Live auth lives in <code>AuthWrapper.jsx</code>, but <code>App.jsx</code> still contains ~400 lines of unused <code>LoginScreen</code>, <code>RegisterScreen</code>, and <code>SplashScreen</code>. Profile saves are duplicated: hooks exist in <code>useBuilderDB.js</code> while <code>AuthWrapper</code> calls Supabase directly.</li>
+          <li><strong>Duplicated constants and utilities:</strong> <code>REGIONS</code> is defined in both <code>App.jsx</code> and <code>AuthWrapper.jsx</code>. Brand colours appear in three files. <code>fmtDate</code> exists in <code>emailService.js</code> but not in <code>QuoteSummary</code>, which shows raw ISO dates (BUG-22).</li>
+          <li><strong>Duplicated diagram code:</strong> Screen previews are SVG React components in <code>App.jsx</code>. Email diagrams are separate SVG string builders in <code>emailService.js</code>. Same geometry, two implementations; they can drift.</li>
+          <li><strong>Client as system of record:</strong> Order submit and email send run in the browser with no API in between. That is an architectural choice to replace, not patch.</li>
+          <li><strong>No schema in repo:</strong> Without <code>supabase/migrations/</code>, RLS and table design cannot be reviewed or reproduced from git.</li>
+          <li><strong>No automated checks:</strong> No ESLint, no tests, no TypeScript on pricing or order shapes. Pricing regressions are likely without <code>calcPrice</code> unit tests.</li>
+          <li><strong>Inline styles only:</strong> Acceptable for the current UI volume. A staff admin portal on the same codebase will need shared layout and form components.</li>
+        </ul>
+
+        <h3>3.4 Recommended organization</h3>
+        <p>
+          Evolve toward this layout as features ship. Order of extraction: pricing and shared utils first, then order flow screens, then auth cleanup.
+        </p>
+        <pre style="background:#f0f4f8;padding:16px;border-radius:4px;font-size:12.5px;line-height:1.5;overflow-x:auto;margin:16px 0 20px;border:1px solid var(--border);"><code>src/
+  lib/                  pricing.js, constants.js, dates.js, brand.js
+  components/           Btn, Input, Card, MeasurementInput, ...
+  hooks/                useBuilderDB.js (and future data hooks)
+  features/
+    auth/               AuthWrapper, ResetPassword
+    dashboard/
+    orders/             quote setup, summary, submit, history
+    screens/            FrontReturn, FixedPanel, QuickQuote, ...
+  email/                templates, diagram renderers (shared where possible)
+api/
+  submit-order.js       persist + notify
+  aroflo.js             existing proxy
+supabase/
+  migrations/           versioned schema + RLS</code></pre>
+        <p>
+          <strong>Coding conventions going forward:</strong> one source for product constants; Supabase access only through hooks or server routes, not ad hoc calls in UI files; pricing and validation importable from both client and API; delete dead code when auth migration is complete; add tests when touching <code>calcPrice</code> or panel rules.
+        </p>
+        <p>
+          <strong>Verdict:</strong> The codebase reflects a working prototype, not a finished application structure. Stack and domain logic are worth keeping. File organization, data access consistency, and server-side order handling need deliberate refactoring as part of delivery, not a separate rewrite project.
         </p>
       </section>
 
@@ -574,18 +729,14 @@
         <figure class="figure">
           <img src="dashboard-current.png" alt="Current HSSS builder dashboard as deployed on Vercel" width="420" />
           <figcaption>
-            Figure 1. Live dashboard at hsss-builder-app.vercel.app (June 2025). The layout is functional as a menu but
-            underdeveloped for a CRM-grade home screen. It shows no builder name, no open orders, no recent activity, no
-            account settings, and no sign-out control. Six tiles lead to features; two of those tiles have no
-            implementation behind them. The narrow column on a wide viewport and emoji-style icons signal prototype
-            quality rather than a finished trade tool.
+            Figure 1. Live dashboard at hsss-builder-app.vercel.app (June 2025). Menu layout is in place; account
+            header, order history, and sign-out are not yet implemented. Two tiles (My Quotes, My Orders) have no
+            navigation handler.
           </figcaption>
         </figure>
         <p>
-          For a builder using this daily, the dashboard should answer three questions immediately: who am I logged in
-          as, what is the status of my recent orders, and what should I do next. The current screen answers none of
-          these. It is a launcher, not a workspace. For HSSS staff, there is no admin view at all. Improving this
-          surface is part of making the product credible in the field, not a cosmetic preference.
+          The home screen should show who is logged in, recent orders, and clear next steps. Today it routes to
+          configurators only. Gaps are listed as BUG-09 through BUG-11 in section 5.
         </p>
 
         <h3>4.3 Built in code but not safely in production</h3>
@@ -643,190 +794,493 @@
       <section>
         <h2>5. Bugs and defects identified in review</h2>
         <p>
-          The following issues were found through static code review, comparison against the developer handoff brief,
-          and inspection of the live dashboard. Severity reflects user or business impact, not implementation effort.
-          Items marked fixed should still be verified on a real device before sign-off.
+          These are specific issues traced through the source files and the live dashboard at hsss-builder-app.vercel.app.
+          Each entry describes what a builder or staff member actually experiences, what the code does, and where it lives.
+          Severity is based on whether a job, a price, or account data can be wrong or lost.
         </p>
-        <table class="bug-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Severity</th>
-              <th>Issue</th>
-              <th>Location</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>BUG-01</td>
-              <td class="sev-p0">Critical</td>
-              <td>Submitted orders are not saved to the database. If EmailJS fails, HSSS may never receive the job and the builder has no record to reference.</td>
-              <td><code>App.jsx</code> <code>submitOrder</code>; no <code>orders</code> table in repo</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-02</td>
-              <td class="sev-p0">Critical</td>
-              <td>Order confirmation screen is shown before the email send completes. The user sees "submitted" while delivery is still in progress, which masks failures until after the fact.</td>
-              <td><code>App.jsx</code> lines 1679 to 1683</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-03</td>
-              <td class="sev-p1">High</td>
-              <td>Dashboard tile "My quotes" is visible but has no navigation handler. Tapping it does nothing.</td>
-              <td><code>App.jsx</code> <code>Dashboard</code> and <code>onNavigate</code> switch (lines 1695 to 1700)</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-04</td>
-              <td class="sev-p1">High</td>
-              <td>Dashboard tile "Order history" is visible but has no navigation handler. Tapping it does nothing.</td>
-              <td><code>App.jsx</code> same <code>onNavigate</code> handler</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-05</td>
-              <td class="sev-p1">High</td>
-              <td><code>useBuilderOrders</code> is a stub: it always returns an empty list and never queries Supabase. Order history cannot work until implemented.</td>
-              <td><code>useBuilderDB.js</code> lines 228 to 259</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-06</td>
-              <td class="sev-p1">High</td>
-              <td>Password reset emails redirect to <code>/reset-password</code>, but no page or route exists in the application.</td>
-              <td><code>AuthWrapper.jsx</code> line 276</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-07</td>
-              <td class="sev-p1">High</td>
-              <td><code>signOut</code> is passed into the main app but never used in the UI. Logged-in builders cannot sign out from the dashboard or ordering flows.</td>
-              <td><code>App.jsx</code> line 1640; <code>AuthWrapper.jsx</code> passes prop</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-08</td>
-              <td class="sev-p2">Medium</td>
-              <td>Fixed panel pricing for widths between 986mm and 1034mm falls through to the small-panel price. Handoff brief flags this range as a known gap needing a business rule.</td>
-              <td><code>App.jsx</code> <code>calcPrice</code> fixed panel branch</td>
-              <td>Open (confirm with Brad)</td>
-            </tr>
-            <tr>
-              <td>BUG-09</td>
-              <td class="sev-p2">Medium</td>
-              <td>Custom order emails do not include builder company or contact details from the logged-in profile, unlike standard order emails.</td>
-              <td><code>emailService.js</code> <code>sendCustomOrderEmail</code></td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-10</td>
-              <td class="sev-p2">Medium</td>
-              <td>Pricing mode (<code>customerType</code>) is set from the builder profile once at load. There is no in-app control to change supply and install vs supply only during a session.</td>
-              <td><code>App.jsx</code> line 1645</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-11</td>
-              <td class="sev-p2">Medium</td>
-              <td>Large multi-screen orders can exceed the EmailJS payload limit. Diagram images are stripped from the email without warning to the builder.</td>
-              <td><code>emailService.js</code> lines 481 to 485</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-12</td>
-              <td class="sev-p2">Medium</td>
-              <td>Supabase project URL and anon key are hardcoded in source instead of environment variables. Security depends entirely on row level security policies that are not versioned in the repo.</td>
-              <td><code>supabaseClient.js</code></td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-13</td>
-              <td class="sev-p2">Medium</td>
-              <td>No SQL migration files in the repository. Schema and RLS policies cannot be reviewed, reproduced, or deployed consistently from source control.</td>
-              <td>Repository root (missing <code>supabase/migrations</code>)</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-14</td>
-              <td class="sev-p2">Medium</td>
-              <td>AroFlo API proxy is protected by a hardcoded PIN (<code>7788</code>) with open CORS. Not suitable for production CRM integration without hardening.</td>
-              <td><code>api/aroflo.js</code>, <code>api/aroflo-test.js</code></td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-15</td>
-              <td class="sev-p3">Low</td>
-              <td>Approximately 400 lines of unused auth UI (<code>LoginScreen</code>, <code>RegisterScreen</code>, <code>SplashScreen</code>, <code>PendingScreen</code>) remain in <code>App.jsx</code> while live auth runs through <code>AuthWrapper.jsx</code>. Increases maintenance risk and confusion.</td>
-              <td><code>App.jsx</code> lines 1029 to 1131</td>
-              <td>Open</td>
-            </tr>
-            <tr>
-              <td>BUG-16</td>
-              <td class="sev-p3">Low</td>
-              <td>Product naming mismatch: handoff brief lists brushed gold; application displays brushed brass.</td>
-              <td><code>App.jsx</code> <code>COLOURS</code> constant</td>
-              <td>Open (product decision)</td>
-            </tr>
-            <tr>
-              <td>BUG-17</td>
-              <td class="sev-fixed">Fixed</td>
-              <td>SplashScreen used <code>useState</code> for a timeout side effect. Handoff brief flagged this; current code uses <code>useEffect</code> correctly. Component is not used in the live auth path.</td>
-              <td><code>App.jsx</code> line 1031</td>
-              <td>Fixed (verify if re-enabled)</td>
-            </tr>
-            <tr>
-              <td>BUG-18</td>
-              <td class="sev-fixed">Fixed</td>
-              <td>Measurement inputs: steppers move by 50mm; free numeric entry works; min and max enforced on blur. Matches handoff specification.</td>
-              <td><code>App.jsx</code> <code>MeasurementInput</code></td>
-              <td>Fixed</td>
-            </tr>
-            <tr>
-              <td>BUG-19</td>
-              <td class="sev-fixed">Fixed</td>
-              <td>Edit and remove on order summary with inline remove confirmation. Matches handoff specification.</td>
-              <td><code>App.jsx</code> <code>QuoteSummary</code></td>
-              <td>Fixed</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="bug-group">
+          <h3>Order submission and email</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-01</span>
+              <span class="sev-p0">Critical</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>submitOrder</code> (lines 1679 to 1683)</span>
+            </div>
+            <p><strong>What happens:</strong> Builder taps Submit Order. The app calls <code>sendOrderEmail</code> via EmailJS from the browser. Nothing is written to Supabase. There is no <code>orders</code> table in the repository.</p>
+            <p><strong>Impact:</strong> If EmailJS is down, over quota (~200 emails/month on free tier), or misconfigured (<code>VITE_EMAILJS_*</code> env vars in <code>emailService.js</code> lines 7 to 9), the job may never reach bradley@hsss.net.au and HSSS has no backup record.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-02</span>
+              <span class="sev-p0">Critical</span>
+              <span class="bug-loc"><code>App.jsx</code> lines 1679 to 1681</span>
+            </div>
+            <p><strong>What happens:</strong> <code>setScreen("quoteSubmitted")</code> runs immediately. <code>sendOrderEmail</code> runs after. The builder sees "Order Submitted!" and a green success layout while email status is still "sending".</p>
+            <p><strong>Impact:</strong> On failure, the headline still says submitted. The error only appears in a smaller card below. Easy to miss on a phone.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-03</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>QuoteSubmitted</code> line 1625</span>
+            </div>
+            <p><strong>What happens:</strong> When email fails, the UI tells the builder: "Your order details are saved."</p>
+            <p><strong>Impact:</strong> That is incorrect. Nothing is saved anywhere. The builder may assume HSSS has the order and not call sales.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-04</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>CustomOrderScreen</code> line 1218</span>
+            </div>
+            <p><strong>What happens:</strong> Custom measure requests show the same false message: "Order saved but email failed to send" when EmailJS fails.</p>
+            <p><strong>Impact:</strong> Same as BUG-03 for non-standard jobs that often need the most staff attention.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-05</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>emailService.js</code> lines 481 to 485</span>
+            </div>
+            <p><strong>What happens:</strong> Before send, payload size is checked. Above ~48KB, all <code>&lt;img&gt;</code> diagram tags are regex-stripped from the HTML email.</p>
+            <p><strong>Impact:</strong> Large multi-screen orders still submit. HSSS receives an email with specs but no diagrams. The builder is not told diagrams were removed.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-06</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>emailService.js</code> <code>sendCustomOrderEmail</code></span>
+            </div>
+            <p><strong>What happens:</strong> Standard orders include company name, contact, email, and phone from <code>builderProfile</code>. Custom order emails only send address, description, measure date, and optional site contact typed on that screen.</p>
+            <p><strong>Impact:</strong> HSSS may not know which registered builder sent a custom request unless they recognize the address.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-07</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>handleQuoteSubmit</code>, <code>LocationLabels</code></span>
+            </div>
+            <p><strong>What happens:</strong> Orders with two or more screens go to the location label screen. Single-screen orders call <code>submitOrder([])</code> directly with no location prompt.</p>
+            <p><strong>Impact:</strong> A one-screen job to "Main bathroom" never gets a room label in the email unless the builder puts it in free-text notes.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-08</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> submit buttons on summary and location screens</span>
+            </div>
+            <p><strong>What happens:</strong> Submit Order has no loading or disabled state while email is sending. A fast double tap can fire two EmailJS sends for one job.</p>
+            <p><strong>Impact:</strong> Duplicate emails to HSSS; possible duplicate processing if staff treat each as a separate job.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Dashboard and navigation</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-09</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>App.jsx</code> lines 1695 to 1700</span>
+            </div>
+            <p><strong>What happens:</strong> Dashboard defines six actions. <code>onNavigate</code> handles <code>newOrder</code>, <code>quickQuote</code>, <code>customOrder</code>, and <code>contact</code> only. Actions <code>myQuotes</code> and <code>orders</code> fall through to <code>setScreen("dashboard")</code>: same screen, no feedback.</p>
+            <p><strong>Impact:</strong> Visible on live app (see Figure 1). Two tiles have no handler (BUG-09, BUG-10).</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-10</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>useBuilderDB.js</code> lines 228 to 259</span>
+            </div>
+            <p><strong>What happens:</strong> <code>useBuilderOrders</code> sets loading, then always sets <code>orders</code> to <code>[]</code>. No Supabase query.</p>
+            <p><strong>Impact:</strong> Even after wiring navigation for "Order history", there is no data layer to connect.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-11</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>App.jsx</code> line 1640; <code>AuthWrapper.jsx</code> line 716</span>
+            </div>
+            <p><strong>What happens:</strong> <code>signOut</code> is passed into <code>HsssBuilderApp</code> but never referenced in the component. Dashboard shows "Welcome back" with no company name and no logout control.</p>
+            <p><strong>Impact:</strong> Shared phones on site cannot switch builder accounts without clearing browser data. <code>builderProfile</code> is available but not displayed.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Auth and registration</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-12</span>
+              <span class="sev-p1">High</span>
+              <span class="bug-loc"><code>AuthWrapper.jsx</code> line 276</span>
+            </div>
+            <p><strong>What happens:</strong> Forgot password sends reset email with <code>redirectTo: ${origin}/reset-password</code>. No component, route, or page handles that path in the app.</p>
+            <p><strong>Impact:</strong> User clicks email link and lands on a blank or Vercel 404. Password reset flow is broken end to end.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-13</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>AuthWrapper.jsx</code> lines 214 to 221, 89 to 101</span>
+            </div>
+            <p><strong>What happens:</strong> On signup, if profile insert fails (common when email confirmation is required), profile JSON is stored in <code>localStorage</code> under <code>hsss_pending_profile</code> until next login.</p>
+            <p><strong>Impact:</strong> Different browser or cleared storage loses registration details. Builder completes signup but profile may never reach Supabase silently.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-14</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>AuthWrapper.jsx</code> needsProfile UI, lines 454 to 511</span>
+            </div>
+            <p><strong>What happens:</strong> Profile completion shows a 3-step progress indicator but only two form steps (company details, then address). Step 3 from signup does not exist on this path.</p>
+            <p><strong>Impact:</strong> Misleading progress UI for builders finishing a partial account.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-15</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc">Repository: no <code>supabase/migrations</code></span>
+            </div>
+            <p><strong>What happens:</strong> Code expects <code>builders</code> and <code>site_contacts</code> tables. No SQL migrations or RLS policy files are in the repo.</p>
+            <p><strong>Impact:</strong> Registration deploy cannot be reviewed for "builder A cannot read builder B data" before production. Schema drift between environments is likely.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Pricing and screen configurators</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-16</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>calcPrice</code> lines 99 to 103</span>
+            </div>
+            <p><strong>What happens:</strong> Fixed panel uses <code>smallMax: 985</code> and <code>largeMin: 1035</code>. Width 986 to 1034 hits the else branch and gets the <em>small</em> price ($704.58 supply and install / $504.21 supply only).</p>
+            <p><strong>Impact:</strong> Example: 1000mm panel priced as small tier. Handoff brief flags this range. Brad needs to confirm intended price or builders are quoted wrong.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-17</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>QuickQuote</code> lines 1327 to 1331</span>
+            </div>
+            <p><strong>What happens:</strong> Front and Return builder blocks sliding doors under 1200mm front width (<code>slidingTooSmall</code>). Quick Quote allows sliding toggle on front return with no minimum check and still calls <code>calcPrice</code> with <code>isSliding: true</code> (+$150).</p>
+            <p><strong>Impact:</strong> Builder gets a price for a configuration that cannot be added to a real order. Quick Quote and New Order disagree on the same inputs.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-18</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>FixedPanelBuilder</code> lines 1002 to 1017</span>
+            </div>
+            <p><strong>What happens:</strong> Walkthrough opening under 600mm shows an amber warning ("may not be fit for purpose"). Add to Order stays enabled.</p>
+            <p><strong>Impact:</strong> Unbuildable or unsafe openings can still be submitted to HSSS.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-19</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>App.jsx</code> line 1645</span>
+            </div>
+            <p><strong>What happens:</strong> <code>customerType</code> is set once from <code>builderProfile.service_type</code> when the app loads. No toggle in ordering or quick quote flows.</p>
+            <p><strong>Impact:</strong> Supply-only builder sees supply-and-install prices (or reverse) if profile service type is wrong or outdated. Affects every <code>calcPrice</code> call in the session.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-20</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>COLOURS</code> line 22</span>
+            </div>
+            <p><strong>What happens:</strong> Handoff product list says "Brushed Gold". App label is "Brushed Brass" with the same surcharge tiers.</p>
+            <p><strong>Impact:</strong> Orders and emails may not match HSSS catalogue naming. Product decision, not a crash.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Ordering flow and UI</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-21</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>LocationLabels</code> line 1493</span>
+            </div>
+            <p><strong>What happens:</strong> Tapping "Other" sets the label to an empty string to show the free-text field. Button highlight checks <code>labels[i] === "Other"</code>, which is never true after selection.</p>
+            <p><strong>Impact:</strong> "Other" never appears selected. Builder may tap it twice or think the tap failed.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-22</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>QuoteSummary</code> delivery schedule card</span>
+            </div>
+            <p><strong>What happens:</strong> Hob, glass, and delivery dates are rendered as raw HTML date values (e.g. <code>2025-07-15</code>) while emails use friendly formatting via <code>fmtDate</code> in <code>emailService.js</code>.</p>
+            <p><strong>Impact:</strong> Inconsistent presentation on summary vs email. Minor but looks unpolished on site.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-23</span>
+              <span class="sev-p3">Low</span>
+              <span class="bug-loc"><code>App.jsx</code> lines 1029 to 1131</span>
+            </div>
+            <p><strong>What happens:</strong> <code>LoginScreen</code>, <code>RegisterScreen</code>, <code>SplashScreen</code>, and <code>PendingScreen</code> are defined inside <code>App.jsx</code> but never used. Live auth is entirely in <code>AuthWrapper.jsx</code>.</p>
+            <p><strong>Impact:</strong> Future edits may change the wrong login flow. Dead code in the main bundle.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Security and integration (pre-production)</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-24</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>supabaseClient.js</code></span>
+            </div>
+            <p><strong>What happens:</strong> Supabase URL and anon key are committed in source. Acceptable only if RLS is tight; policies are not in the repo to verify.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">BUG-25</span>
+              <span class="sev-p2">Medium</span>
+              <span class="bug-loc"><code>api/aroflo.js</code> line 25</span>
+            </div>
+            <p><strong>What happens:</strong> Anyone who knows PIN <code>7788</code> can call the Vercel proxy and hit AroFlo with HSSS credentials from env. CORS is <code>*</code>.</p>
+            <p><strong>Impact:</strong> Not a builder-facing bug today, but unsafe before CRM phase goes live.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Confirmed working (handoff checklist)</h3>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">OK-01</span>
+              <span class="sev-fixed">Verified</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>MeasurementInput</code></span>
+            </div>
+            <p>+/− steppers move 50mm. Typing exact mm works. Min/max enforced on blur only.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">OK-02</span>
+              <span class="sev-fixed">Verified</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>QuoteSummary</code></span>
+            </div>
+            <p>Edit reopens the correct builder screen with <code>initialData</code>. Remove asks inline yes/no before deleting a screen from the quote.</p>
+          </div>
+
+          <div class="bug-item">
+            <div class="bug-head">
+              <span class="bug-id">OK-03</span>
+              <span class="sev-fixed">Verified</span>
+              <span class="bug-loc"><code>App.jsx</code> <code>SplashScreen</code> line 1031</span>
+            </div>
+            <p>Splash timeout uses <code>useEffect</code> (handoff bug fixed). Component unused in current auth entry via <code>AuthWrapper</code>.</p>
+          </div>
+        </div>
+
         <p>
-          <strong>Summary:</strong> 14 open issues (2 critical, 5 high, 7 medium, 2 low), 3 confirmed fixed from the
-          handoff checklist. Critical items BUG-01 and BUG-02 are the highest business priority because they directly
-          affect whether HSSS receives paid work. High-severity dashboard and auth issues (BUG-03 to BUG-07) undermine
-          builder trust on first use. Medium items should be addressed during stabilization and before registration goes
-          to production.
+          <strong>Count:</strong> 25 open issues (2 critical, 6 high, 11 medium, 6 low), 3 handoff items verified.
+          First release priority: order submission path (BUG-01 to BUG-04), then dashboard and auth (BUG-09 to BUG-12).
         </p>
       </section>
 
       <section>
-        <h2>6. CRM and data integrity gaps</h2>
+        <h2>6. Proposed fixes</h2>
         <p>
-          A CRM system requires that every client interaction is recorded, retrievable, and attributable. Today an order
-          exists only if EmailJS successfully delivers a message to the HSSS inbox. The application navigates to a
-          success screen before email completion. If sending fails, the builder sees a warning but HSSS may never
-          receive the job. There is no duplicate protection, no submission log, and no way for a builder to revisit a
-          past order in the app.
+          Mapped to section 5 bug IDs. Implementation order: submission and persistence, dashboard and auth, pricing
+          corrections, then UI and security hardening. The existing <code>sendOrderEmail</code> import in
+          <code>App.jsx</code> stays stable during transition; the server route can call the same email logic internally.
         </p>
+
+        <div class="bug-group">
+          <h3>Order submission and email</h3>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-01, BUG-02, BUG-08</div>
+            <p><strong>Server-side submit endpoint.</strong> Add <code>POST /api/submit-order</code> (Vercel serverless or Supabase Edge Function). Payload: builder id, quote fields, screens JSON, location labels. Handler order: validate auth session, validate pricing server-side against the same <code>calcPrice</code> rules, insert row into <code>orders</code> + <code>order_items</code>, then call email send. Return <code>{ orderId, emailSent }</code>.</p>
+            <p><strong>Client change.</strong> <code>submitOrder</code> awaits the API response before navigating. Show a loading state on Submit Order (disabled button + "Sending..."). Success screen displays order reference number. If email fails but DB insert succeeded, show: "Order #1042 received. Email notification delayed. HSSS has your order."</p>
+            <p><strong>Idempotency.</strong> Client generates a <code>submission_id</code> UUID per attempt. Server rejects duplicate <code>submission_id</code> to block double-tap sends (BUG-08).</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-03, BUG-04</div>
+            <p>Remove all copy that says "saved" unless a database row exists. Replace with accurate states: sending, received (order id), email failed (with sales phone links). Apply to <code>QuoteSubmitted</code> and <code>CustomOrderScreen</code> success views.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-05</div>
+            <p>Move email build to the server where payload limits are easier to manage. If diagrams must be stripped, include a line in the builder confirmation: "Diagrams omitted from email due to size; full spec stored on order #1042." Long term: store diagram PNGs in Supabase Storage and link from the email instead of inline base64.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-06</div>
+            <p>Pass <code>user</code> and <code>builderProfile</code> into <code>CustomOrderScreen</code>. Extend <code>sendCustomOrderEmail</code> to use the same builder header block as standard orders (company, contact, email, phone).</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-07</div>
+            <p>Always show location label step when screen count is 1, or add an optional "Room / location" field on order setup that flows into the email. Minimum change: call the location screen for every order, not only when <code>screens.length &gt;= 2</code>.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Dashboard and navigation</h3>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-09, BUG-10</div>
+            <p>Implement <code>useBuilderOrders</code> with a real Supabase query: <code>orders</code> where <code>builder_id</code> matches, ordered by <code>created_at desc</code>. Add <code>orderHistory</code> and <code>myQuotes</code> screens. Wire <code>onNavigate</code> cases. Until data exists in early weeks, hide the tiles or show "No orders yet" instead of silent no-op.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-11</div>
+            <p>Add a dashboard header: company name from <code>builderProfile.company_name</code>, contact name, service type badge. Add Sign out button calling the existing <code>signOut</code> prop. Shared-site phones need this on day one.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Auth and registration</h3>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-12</div>
+            <p>Add <code>ResetPassword.jsx</code> route. On load, read Supabase session from URL hash, show new password form, call <code>supabase.auth.updateUser({ password })</code>. Add SPA fallback in <code>vercel.json</code> so <code>/reset-password</code> serves the app.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-13, BUG-15</div>
+            <p>Export current Supabase schema to <code>supabase/migrations/</code>. Add RLS: builders read/write own row; site contacts scoped by <code>builder_id</code>. Replace localStorage profile fallback with a Supabase database trigger or edge function on <code>auth.users</code> confirm that reads signup metadata. Document env vars in <code>.env.example</code>.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-14</div>
+            <p>Set <code>StepIndicator total={2}</code> on the needsProfile flow, or add the missing third step. Match what the user actually sees.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>Pricing and configurators</h3>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-16</div>
+            <p>Get Brad's rule for 986 to 1034mm. Implement as explicit branch in <code>calcPrice</code> (e.g. interpolate, large tier, or custom quote). Add unit test with inputs 985, 1000, 1034, 1035 so the gap cannot regress.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-17</div>
+            <p>Reuse the same <code>slidingTooSmall</code> check from <code>FrontReturnBuilder</code> inside <code>QuickQuote</code>. Do not show price when sliding and front &lt; 1200mm. Show the same red warning used on the order builder.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-18</div>
+            <p>Disable "Add to Order" when <code>walkMM &gt; 0 &amp;&amp; walkMM &lt; 600</code>, same pattern as <code>slidingTooSmall</code>. Warning plus enforcement.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-19</div>
+            <p>Show read-only service type on dashboard ("Pricing mode: Supply &amp; Install"). Add "Update in profile" link or settings screen that edits <code>builders.service_type</code> and refreshes <code>customerType</code> state. Prevents silent wrong pricing for the whole session.</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-20</div>
+            <p>One-line product fix after Brad confirms catalogue name. Update <code>COLOURS</code>, email templates, and any printed spec sheets to match.</p>
+          </div>
+        </div>
+
+        <div class="bug-group">
+          <h3>UI polish and security</h3>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-21, BUG-22, BUG-23</div>
+            <p><strong>BUG-21:</strong> Track <code>locationMode[i] === 'other'</code> separately from label text so the Other chip stays highlighted.</p>
+            <p><strong>BUG-22:</strong> Extract <code>fmtDate</code> to a shared util; use on <code>QuoteSummary</code> delivery dates.</p>
+            <p><strong>BUG-23:</strong> Delete unused <code>LoginScreen</code>, <code>RegisterScreen</code>, <code>SplashScreen</code>, <code>PendingScreen</code> from <code>App.jsx</code> (~400 lines removed).</p>
+          </div>
+
+          <div class="solution-item">
+            <div class="maps-to">Addresses BUG-24, BUG-25</div>
+            <p>Move Supabase URL and anon key to <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>. Remove AroFlo PIN from client; proxy accepts only authenticated staff session or server-to-server secret header.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Technical direction</h2>
+
+        <div class="vision-block">
+          <h3>Target product behaviour</h3>
+          <p>
+            Builder logs in, sees company name and recent orders, configures screens with live pricing aligned to the
+            rate card, submits once, and receives an order reference. HSSS gets email with diagrams. The same record
+            syncs to AroFlo as a task with resolved assemblies. Order history supports repeat jobs without re-entry.
+          </p>
+          <p>
+            Later phase: HSSS staff view for registrations, submissions, and custom panel flags. Pricing maintained via
+            configuration or database table rather than scattered constants in <code>App.jsx</code>.
+          </p>
+        </div>
+
+        <div class="vision-block">
+          <h3>Target architecture</h3>
+          <p>
+            <strong>Client:</strong> React PWA split into feature modules (<code>orders</code>, <code>screens</code>, <code>pricing</code>). Auth remains in <code>AuthWrapper</code>. Pricing logic extracted to a shared module used by client and server.
+          </p>
+          <p>
+            <strong>API (Vercel serverless):</strong> Order submit, notification send, AroFlo sync. Secrets server-side only.
+          </p>
+          <p>
+            <strong>Data (Supabase):</strong> <code>builders</code>, <code>site_contacts</code>, <code>orders</code>, <code>order_items</code>, <code>aroflo_client_map</code> when integration is ready. Migrations versioned in the repository. RLS verified before registration goes live.
+          </p>
+          <p>
+            <strong>Integrations:</strong> Email for notifications; AroFlo for job management; Supabase Storage for diagram assets if inline email payloads remain too large.
+          </p>
+        </div>
+
+        <div class="vision-block">
+          <h3>Production-ready criteria</h3>
+          <p>
+            Every submission creates a database record. Email is a notification channel, not the system of record.
+            Builders have order history and sign-out. Password reset works. Registration ships with tested RLS.
+            Pricing edge cases documented and covered by tests. Dashboard shows account context. AroFlo wired for
+            standard stock orders first. Codebase modular enough to maintain as a single long-running product.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>8. Data and integration gaps</h2>
         <p>
-          The <code>useBuilderOrders</code> hook is a stub. Builder profiles and site contacts are the only persisted
-          CRM entities. EmailJS free tier allows roughly two hundred messages per month, which will constrain growth.
-          Large multi-screen orders risk hitting EmailJS payload limits; the code already strips diagrams when the
-          message exceeds size thresholds.
-        </p>
-        <p>
-          Supabase credentials are hardcoded in the client bundle. That is common for anon keys when row level security
-          is correct, but policies are not versioned in the repository, so security posture cannot be verified by
-          inspection alone. The AroFlo proxy uses a fixed PIN and open cross-origin access, which is acceptable for
-          internal testing only.
+          Orders are not persisted today. Builder profiles and site contacts are the only CRM entities in Supabase.
+          EmailJS carries a monthly volume cap and payload limits on large orders. AroFlo proxy credentials need
+          hardening before production CRM use. Full detail is in section 5; fixes are in section 6.
         </p>
       </section>
 
       <section>
-        <h2>7. Confirmed handoff checklist</h2>
+        <h2>9. Confirmed handoff checklist</h2>
         <table>
           <thead>
             <tr>
@@ -868,23 +1322,21 @@
       </section>
 
       <section>
-        <h2>8. Recommendation: evolve, do not rebuild</h2>
+        <h2>10. Recommendation: evolve, do not rebuild</h2>
         <p>
-          A full rewrite would delay value across many weeks of rework, reintroduce pricing risk, and disrupt builders
-          already using the live URL. The existing engine encodes non-trivial domain knowledge: surcharge rules, screen
-          geometry, diagram generation, and email layout. The correct engineering path is to add the layers a prototype
-          lacks: versioned schema, server-side order capture, modular code structure, automated tests on pricing, and
-          phased AroFlo integration.
+          A full rewrite would delay value and reintroduce pricing risk for builders already using the live URL. The
+          existing engine encodes domain knowledge: surcharge rules, screen geometry, diagram generation, and email layout.
+          The path forward is to add versioned schema, server-side order capture, and phased AroFlo integration, while
+          restructuring the codebase per sections 3.3 and 3.4 (extract modules from <code>App.jsx</code>, consolidate
+          data access, remove dead auth code).
         </p>
         <p>
-          Release discipline will be branch-based preview deploys on Vercel, regression testing on ordering and email
-          before every production merge, and no direct pushes to main for authentication or database changes until
-          staging sign-off is complete.
+          Auth and database changes will go through Vercel preview deploys before production merge.
         </p>
       </section>
 
       <section>
-        <h2>9. Delivery plan</h2>
+        <h2>11. Delivery plan</h2>
 
         <div class="phase-block">
           <div class="phase-title">Phase 1: Stabilize and ship registration</div>
@@ -912,10 +1364,10 @@
         <div class="phase-block">
           <div class="phase-title">Phase 3: Engineering hardening</div>
           <p>
-            Typical focus over subsequent weeks as features stabilize. Split <code>App.jsx</code> into feature modules.
-            Add TypeScript for pricing and order models. Unit test <code>calcPrice()</code> and panel formulas from the
-            handoff document. Introduce linting and continuous integration. Externalize pricing tables so commercial
-            updates do not always require code changes.
+            Typical focus over subsequent weeks as features stabilize. Extract <code>lib/pricing.js</code> and shared
+            constants per section 3.4. Move screen builders and order flow into <code>features/</code>. Wire
+            <code>AuthWrapper</code> through <code>useBuilderProfile</code> instead of direct Supabase calls. Add unit
+            tests on <code>calcPrice()</code> and panel formulas from the handoff document. Introduce linting and CI.
           </p>
         </div>
 
@@ -940,7 +1392,7 @@
       </section>
 
       <section>
-        <h2>10. Scalability approach</h2>
+        <h2>12. Scalability approach</h2>
         <p>
           Vercel and Supabase are sufficient for thousands of monthly orders without platform migration. Scaling effort
           belongs in application design: server-side validation prevents price tampering, indexed order tables support
@@ -948,15 +1400,14 @@
           structured logging plus error tracking surface failures before builders report them.
         </p>
         <p>
-          Configuration-driven pricing and region rules allow HSSS to adjust commercial terms without redeploying the
-          entire frontend. Modular code allows a second developer to contribute on admin features once the monolith is
-          split. Migrations in source control mean database state is reproducible and reviewable, which this project
-          currently lacks.
+          Configuration-driven pricing and region rules allow commercial updates without redeploying the entire frontend.
+          Modular structure keeps the codebase maintainable as a single long-running product. Migrations in source control
+          make database state reproducible; that versioning is not in the repository today.
         </p>
       </section>
 
       <section>
-        <h2>11. Risk summary</h2>
+        <h2>13. Risk summary</h2>
         <table>
           <thead>
             <tr>
@@ -1001,7 +1452,7 @@
       </section>
 
       <section>
-        <h2>12. Access required to begin</h2>
+        <h2>14. Access required to begin</h2>
         <p>
           Supabase dashboard and service role for policy review. Vercel project and environment variables. EmailJS
           account for template and quota review. AroFlo credentials for staging integration tests. Product decisions on
@@ -1010,42 +1461,27 @@
       </section>
 
       <section>
-        <h2>13. Commercial outcomes of delivery</h2>
+        <h2>15. Expected outcomes</h2>
         <p>
-          When this work is executed as planned, HSSS gains measurable business capability even before every feature is
-          complete. Registration and persistent builder profiles mean you know who is ordering and can approve accounts
-          deliberately. Server-side order storage means revenue opportunities are never hostage to an email provider.
-          Order history means builders reorder through you instead of re-quoting elsewhere. AroFlo integration means
-          scheduling and production see jobs sooner with fewer transcription errors. Admin visibility means leadership
-          can see volume and configuration trends without asking staff to compile reports.
-        </p>
-        <p>
-          None of that requires betting on a new product. It requires finishing what you started with discipline. That is
-          the business case for moving forward now with dedicated technical leadership rather than leaving the app in
-          maintenance limbo.
+          Registration and persistent builder profiles give HSSS control over who can order. Server-side order storage
+          removes dependence on inbox delivery. Order history supports repeat business. AroFlo integration reduces manual
+          re-entry. These outcomes follow from completing the phases in section 11 on the existing codebase.
         </p>
       </section>
 
       <div class="closing">
         <div class="tag">Closing statement for owners</div>
         <p>
-          HSSS is closer to a real builder platform than this report's defect list might suggest on its own. The live
-          app, the pricing engine, and the product knowledge embedded in the code are assets your competitors do not
-          have sitting ready to scale. What is missing is the layer that turns a clever prototype into business
-          infrastructure: reliable orders, returning users, staff workflows, and a codebase someone owns end to end. I am
-          prepared to provide that ownership. The live app stays up. The investment you have already made is protected.
-          The outcome is a system builders trust and your team can run without depending on one inbox and improvised fixes.
+          The application has a working core: pricing, screen builders, and email-based order delivery. The work ahead is
+          to make submissions reliable, complete the dashboard and registration layer, and connect to AroFlo. The live
+          app remains the base; the plan is extension and hardening, not a rebuild.
         </p>
       </div>
     </main>
 
     <footer>
-      Assessment prepared by Ramil Huertas. My verdict: HSSS has a commercially valuable ordering channel already in
-      production, but it is one failed email away from losing jobs and one rough user session away from losing builders.
-      The risks and bugs documented here are real and fixable without a rewrite. The business upside is equally real:
-      faster repeat orders, less manual quoting, scalable onboarding, and a direct line into AroFlo. I am ready to lead
-      that delivery in phased releases, with production readiness as the long-term target and pace set by access,
-      product decisions, and sign-off at each stage.
+      Based on repository review, the developer handoff brief, and inspection of the live deployment. Codebase patterns:
+      section 3. Open defects: section 5. Proposed fixes: section 6. Target architecture: section 7.
     </footer>
   </div>
 </body>
