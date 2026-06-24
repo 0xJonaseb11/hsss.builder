@@ -92,6 +92,62 @@
       line-height: 1.7;
     }
 
+    .business-callout {
+      background: var(--navy-deep);
+      color: var(--white);
+      padding: 28px 32px;
+      margin-bottom: 40px;
+      border-radius: 2px;
+    }
+
+    .business-callout .tag {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .business-callout p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 0;
+    }
+
+    .value-table td:first-child {
+      font-weight: 600;
+      color: var(--navy);
+      width: 28%;
+    }
+
+    .value-table .col-today {
+      color: var(--muted);
+    }
+
+    .value-table .col-future {
+      color: var(--navy);
+      font-weight: 500;
+    }
+
+    .leadership-block {
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--cyan);
+      padding: 22px 24px;
+      margin: 20px 0 0;
+      background: #fafbfc;
+    }
+
+    .leadership-block p {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .leadership-block p:last-child {
+      margin-bottom: 0;
+    }
+
     section {
       margin-bottom: 36px;
     }
@@ -272,15 +328,114 @@
       <div class="owner-summary" id="owner-summary">
         <div class="tag">Summary for owners</div>
         <p>
-          The HSSS builder app is a working field tool with real pricing logic and order flows, but it is not yet a
-          production-ready CRM. Orders leave the browser by email only, two dashboard actions do nothing, and the
-          interface reads as a prototype rather than a system builders will trust daily. I recommend keeping the
-          existing codebase and evolving it in controlled releases: first stabilize and ship registration with a
-          verified database layer, then persist every order server-side so nothing is lost, then refactor into
-          maintainable modules and connect AroFlo for job management. Over successive development phases this becomes a
-          reliable builder portal with order history, staff visibility, and room to scale without a risky rewrite.
+          You already have a live ordering channel that most shower screen suppliers do not offer: builders can price
+          and submit from site on their phone. That is real competitive ground. What holds it back is not the idea but
+          the backend: orders can disappear if email fails, the dashboard does not retain builders, and staff still
+          carry the weight of manual follow-up. I recommend evolving what exists in controlled releases: ship
+          registration and verified data storage first, then make every order permanent server-side, then connect AroFlo
+          so jobs enter your workflow without re-keying. The prototype becomes a revenue asset, not a liability, without
+          the cost and risk of starting over.
         </p>
       </div>
+
+      <div class="business-callout">
+        <div class="tag">Why this matters commercially</div>
+        <p>
+          Every builder who opens this app and gets a price in seconds is a builder who did not call your competitor
+          first. Every order that lands only in an inbox is a job that can be lost, misread, or delayed. The hard work
+          is already done: live pricing, screen configuration, branded emails, and a deployed URL. What HSSS needs now
+          is one accountable technical owner to turn that into a system the business can depend on and grow through.
+          That is the gap this engagement closes.
+        </p>
+      </div>
+
+      <section>
+        <h2>Business stake: what is on the table</h2>
+        <p>
+          This is not a software vanity project. It is a direct extension of how HSSS wins and keeps builder work.
+          Builders buy on speed and certainty at the job site. Your team sells on quality install and reliable supply.
+          The app sits exactly at that intersection. When it works properly, it shortens the path from measurement to
+          confirmed order. When it does not, builders revert to phone calls, and your sales team absorbs work the app
+          was meant to remove.
+        </p>
+        <table class="value-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Today</th>
+              <th>With structured delivery</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Order capture</td>
+              <td class="col-today">Browser sends email; failed sends mean lost jobs</td>
+              <td class="col-future">Every submission stored; staff always have a record to act on</td>
+            </tr>
+            <tr>
+              <td>Builder loyalty</td>
+              <td class="col-today">No order history; builders cannot track what they submitted</td>
+              <td class="col-future">Repeat orders faster; builders stay inside your channel</td>
+            </tr>
+            <tr>
+              <td>Sales and scheduling load</td>
+              <td class="col-today">Bradley's inbox and phone carry standard quoting volume</td>
+              <td class="col-future">Stock sizes self-serve; team focuses on custom panels and relationships</td>
+            </tr>
+            <tr>
+              <td>Operational scale</td>
+              <td class="col-today">Growth limited by email quota and manual AroFlo entry</td>
+              <td class="col-future">More builders onboarded without matching admin headcount</td>
+            </tr>
+            <tr>
+              <td>Job management</td>
+              <td class="col-today">Email parsing and manual task creation (AutoPilot incomplete)</td>
+              <td class="col-future">Orders flow into AroFlo with correct assemblies and client links</td>
+            </tr>
+            <tr>
+              <td>Investment to date</td>
+              <td class="col-today">Pricing engine, diagrams, four screen types, live deployment</td>
+              <td class="col-future">Same asset hardened and extended; no sunk-cost rewrite</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The cost of delay is not abstract. Builders who trial the app today see a dashboard that feels unfinished.
+          Two menu items do nothing. There is no sign-out, no name, no status. First impressions stick. Either HSSS
+          fixes that trajectory now with proper ownership, or the app becomes something builders tried once and
+          abandoned while competitors keep the relationship on the phone.
+        </p>
+      </section>
+
+      <section>
+        <h2>Why the timing works in your favour</h2>
+        <p>
+          You are not starting from zero. The live URL is proof to builders that HSSS is serious about digital ordering.
+          The handoff brief shows someone already encoded years of product knowledge into pricing rules and screen
+          logic. Registration and database hooks are written and waiting. AroFlo integration has a working API proxy
+          and documented lessons that would take a new developer weeks to rediscover.
+        </p>
+        <p>
+          A rebuild would burn that advantage and push revenue capture months away. Continuing without a technical lead
+          means more ad hoc changes, more risk to the live app, and no path from prototype to CRM. Bringing in structured
+          ownership now means the next dollar spent on development compounds on what already works instead of replacing it.
+        </p>
+        <div class="leadership-block">
+          <p>
+            <strong>What I bring to this engagement:</strong> a single point of accountability across frontend, database,
+            deployment, and integration. I have already mapped the defects, the undeployed registration work, the CRM gaps,
+            and the phased path to production. I will not need months to understand the codebase before delivering value.
+            The first weeks focus on stabilizing what builders use today and shipping registration safely. Everything after
+            that builds toward a platform HSSS owns outright: your data, your pricing rules, your builder relationships,
+            connected to how you already run jobs in AroFlo.
+          </p>
+          <p>
+            <strong>What HSSS does not need:</strong> another experimental build, a part-time developer patching issues
+            without a release process, or a generic agency that will recommend throwing the app away and quoting six figures
+            for a replacement. You need someone who treats this as your sales infrastructure and runs it accordingly.
+          </p>
+        </div>
+      </section>
 
       <section>
         <h2>1. Purpose of this document</h2>
@@ -657,27 +812,43 @@
         </p>
       </section>
 
+      <section>
+        <h2>12. Commercial outcomes of delivery</h2>
+        <p>
+          When this work is executed as planned, HSSS gains measurable business capability even before every feature is
+          complete. Registration and persistent builder profiles mean you know who is ordering and can approve accounts
+          deliberately. Server-side order storage means revenue opportunities are never hostage to an email provider.
+          Order history means builders reorder through you instead of re-quoting elsewhere. AroFlo integration means
+          scheduling and production see jobs sooner with fewer transcription errors. Admin visibility means leadership
+          can see volume and configuration trends without asking staff to compile reports.
+        </p>
+        <p>
+          None of that requires betting on a new product. It requires finishing what you started with discipline. That is
+          the business case for moving forward now with dedicated technical leadership rather than leaving the app in
+          maintenance limbo.
+        </p>
+      </section>
+
       <div class="closing">
         <div class="tag">Closing statement for owners</div>
         <p>
-          The HSSS builder platform proves the business model: builders can price and submit shower screen orders from
-          site. What it lacks is the infrastructure behind a real CRM: reliable order storage, a dashboard that serves
-          returning users, staff visibility, and a codebase that can grow without breaking. I will not throw away the
-          working prototype. I will test it properly, ship registration safely, make every order permanent in the
-          database, and build toward AroFlo and an admin layer in phased releases. The live app stays up throughout. The
-          outcome is a production-ready builder portal HSSS owns and can scale, led by structured engineering rather
-          than ad hoc changes.
+          HSSS is closer to a real builder platform than this report's defect list might suggest on its own. The live
+          app, the pricing engine, and the product knowledge embedded in the code are assets your competitors do not
+          have sitting ready to scale. What is missing is the layer that turns a clever prototype into business
+          infrastructure: reliable orders, returning users, staff workflows, and a codebase someone owns end to end. I am
+          prepared to provide that ownership. The live app stays up. The investment you have already made is protected.
+          The outcome is a system builders trust and your team can run without depending on one inbox and improvised fixes.
         </p>
       </div>
     </main>
 
     <footer>
-      This document reflects my professional verdict after reviewing the live application, the developer handoff brief,
-      and the full repository. The platform has a sound commercial foundation but carries material risk in order
-      reliability, incomplete CRM features, and prototype-level structure. The bugs and gaps identified are addressable
-      without a rewrite. The path forward is phased stabilization, server-side order persistence, modular engineering,
-      and gradual integration with AroFlo, with production readiness as the long-term target rather than a fixed
-      calendar milestone. Scope and pace will align with access, product decisions, and release sign-off at each stage.
+      Assessment prepared by Ramil Huertas. My verdict: HSSS has a commercially valuable ordering channel already in
+      production, but it is one failed email away from losing jobs and one rough user session away from losing builders.
+      The risks and bugs documented here are real and fixable without a rewrite. The business upside is equally real:
+      faster repeat orders, less manual quoting, scalable onboarding, and a direct line into AroFlo. I am ready to lead
+      that delivery in phased releases, with production readiness as the long-term target and pace set by access,
+      product decisions, and sign-off at each stage.
     </footer>
   </div>
 </body>
