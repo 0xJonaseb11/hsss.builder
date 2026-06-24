@@ -248,6 +248,41 @@
       font-weight: 600;
     }
 
+    .sev-p0 {
+      color: #9b2335;
+      font-weight: 600;
+    }
+
+    .sev-p1 {
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    .sev-p2 {
+      color: #8a6d1a;
+      font-weight: 600;
+    }
+
+    .sev-p3 {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sev-fixed {
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .bug-table td:nth-child(1) {
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .bug-table code {
+      font-size: 11.5px;
+    }
+
     .closing {
       margin-top: 44px;
       padding-top: 28px;
@@ -560,8 +595,8 @@
           table through <code>useBuilderDB.js</code>. However, no SQL migrations appear in the repository, row level
           security policies cannot be reviewed from source control, and registration has not been validated on a staging
           deploy against production data. Password reset emails reference a <code>/reset-password</code> route that does
-          not exist. PWA icon files are referenced in configuration but missing from the repo. These items block a
-          confident registration release.
+          not exist. PWA icon files are now present in the repository under <code>public/</code>; confirm they are
+          deployed correctly on production. These items block a confident registration release.
         </p>
 
         <h3>4.4 Documented product rules not yet reflected in software</h3>
@@ -606,7 +641,169 @@
       </section>
 
       <section>
-        <h2>5. CRM and data integrity gaps</h2>
+        <h2>5. Bugs and defects identified in review</h2>
+        <p>
+          The following issues were found through static code review, comparison against the developer handoff brief,
+          and inspection of the live dashboard. Severity reflects user or business impact, not implementation effort.
+          Items marked fixed should still be verified on a real device before sign-off.
+        </p>
+        <table class="bug-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Severity</th>
+              <th>Issue</th>
+              <th>Location</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BUG-01</td>
+              <td class="sev-p0">Critical</td>
+              <td>Submitted orders are not saved to the database. If EmailJS fails, HSSS may never receive the job and the builder has no record to reference.</td>
+              <td><code>App.jsx</code> <code>submitOrder</code>; no <code>orders</code> table in repo</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-02</td>
+              <td class="sev-p0">Critical</td>
+              <td>Order confirmation screen is shown before the email send completes. The user sees "submitted" while delivery is still in progress, which masks failures until after the fact.</td>
+              <td><code>App.jsx</code> lines 1679 to 1683</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-03</td>
+              <td class="sev-p1">High</td>
+              <td>Dashboard tile "My quotes" is visible but has no navigation handler. Tapping it does nothing.</td>
+              <td><code>App.jsx</code> <code>Dashboard</code> and <code>onNavigate</code> switch (lines 1695 to 1700)</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-04</td>
+              <td class="sev-p1">High</td>
+              <td>Dashboard tile "Order history" is visible but has no navigation handler. Tapping it does nothing.</td>
+              <td><code>App.jsx</code> same <code>onNavigate</code> handler</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-05</td>
+              <td class="sev-p1">High</td>
+              <td><code>useBuilderOrders</code> is a stub: it always returns an empty list and never queries Supabase. Order history cannot work until implemented.</td>
+              <td><code>useBuilderDB.js</code> lines 228 to 259</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-06</td>
+              <td class="sev-p1">High</td>
+              <td>Password reset emails redirect to <code>/reset-password</code>, but no page or route exists in the application.</td>
+              <td><code>AuthWrapper.jsx</code> line 276</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-07</td>
+              <td class="sev-p1">High</td>
+              <td><code>signOut</code> is passed into the main app but never used in the UI. Logged-in builders cannot sign out from the dashboard or ordering flows.</td>
+              <td><code>App.jsx</code> line 1640; <code>AuthWrapper.jsx</code> passes prop</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-08</td>
+              <td class="sev-p2">Medium</td>
+              <td>Fixed panel pricing for widths between 986mm and 1034mm falls through to the small-panel price. Handoff brief flags this range as a known gap needing a business rule.</td>
+              <td><code>App.jsx</code> <code>calcPrice</code> fixed panel branch</td>
+              <td>Open (confirm with Brad)</td>
+            </tr>
+            <tr>
+              <td>BUG-09</td>
+              <td class="sev-p2">Medium</td>
+              <td>Custom order emails do not include builder company or contact details from the logged-in profile, unlike standard order emails.</td>
+              <td><code>emailService.js</code> <code>sendCustomOrderEmail</code></td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-10</td>
+              <td class="sev-p2">Medium</td>
+              <td>Pricing mode (<code>customerType</code>) is set from the builder profile once at load. There is no in-app control to change supply and install vs supply only during a session.</td>
+              <td><code>App.jsx</code> line 1645</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-11</td>
+              <td class="sev-p2">Medium</td>
+              <td>Large multi-screen orders can exceed the EmailJS payload limit. Diagram images are stripped from the email without warning to the builder.</td>
+              <td><code>emailService.js</code> lines 481 to 485</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-12</td>
+              <td class="sev-p2">Medium</td>
+              <td>Supabase project URL and anon key are hardcoded in source instead of environment variables. Security depends entirely on row level security policies that are not versioned in the repo.</td>
+              <td><code>supabaseClient.js</code></td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-13</td>
+              <td class="sev-p2">Medium</td>
+              <td>No SQL migration files in the repository. Schema and RLS policies cannot be reviewed, reproduced, or deployed consistently from source control.</td>
+              <td>Repository root (missing <code>supabase/migrations</code>)</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-14</td>
+              <td class="sev-p2">Medium</td>
+              <td>AroFlo API proxy is protected by a hardcoded PIN (<code>7788</code>) with open CORS. Not suitable for production CRM integration without hardening.</td>
+              <td><code>api/aroflo.js</code>, <code>api/aroflo-test.js</code></td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-15</td>
+              <td class="sev-p3">Low</td>
+              <td>Approximately 400 lines of unused auth UI (<code>LoginScreen</code>, <code>RegisterScreen</code>, <code>SplashScreen</code>, <code>PendingScreen</code>) remain in <code>App.jsx</code> while live auth runs through <code>AuthWrapper.jsx</code>. Increases maintenance risk and confusion.</td>
+              <td><code>App.jsx</code> lines 1029 to 1131</td>
+              <td>Open</td>
+            </tr>
+            <tr>
+              <td>BUG-16</td>
+              <td class="sev-p3">Low</td>
+              <td>Product naming mismatch: handoff brief lists brushed gold; application displays brushed brass.</td>
+              <td><code>App.jsx</code> <code>COLOURS</code> constant</td>
+              <td>Open (product decision)</td>
+            </tr>
+            <tr>
+              <td>BUG-17</td>
+              <td class="sev-fixed">Fixed</td>
+              <td>SplashScreen used <code>useState</code> for a timeout side effect. Handoff brief flagged this; current code uses <code>useEffect</code> correctly. Component is not used in the live auth path.</td>
+              <td><code>App.jsx</code> line 1031</td>
+              <td>Fixed (verify if re-enabled)</td>
+            </tr>
+            <tr>
+              <td>BUG-18</td>
+              <td class="sev-fixed">Fixed</td>
+              <td>Measurement inputs: steppers move by 50mm; free numeric entry works; min and max enforced on blur. Matches handoff specification.</td>
+              <td><code>App.jsx</code> <code>MeasurementInput</code></td>
+              <td>Fixed</td>
+            </tr>
+            <tr>
+              <td>BUG-19</td>
+              <td class="sev-fixed">Fixed</td>
+              <td>Edit and remove on order summary with inline remove confirmation. Matches handoff specification.</td>
+              <td><code>App.jsx</code> <code>QuoteSummary</code></td>
+              <td>Fixed</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <strong>Summary:</strong> 14 open issues (2 critical, 5 high, 7 medium, 2 low), 3 confirmed fixed from the
+          handoff checklist. Critical items BUG-01 and BUG-02 are the highest business priority because they directly
+          affect whether HSSS receives paid work. High-severity dashboard and auth issues (BUG-03 to BUG-07) undermine
+          builder trust on first use. Medium items should be addressed during stabilization and before registration goes
+          to production.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. CRM and data integrity gaps</h2>
         <p>
           A CRM system requires that every client interaction is recorded, retrievable, and attributable. Today an order
           exists only if EmailJS successfully delivers a message to the HSSS inbox. The application navigates to a
@@ -629,7 +826,7 @@
       </section>
 
       <section>
-        <h2>6. Confirmed handoff checklist</h2>
+        <h2>7. Confirmed handoff checklist</h2>
         <table>
           <thead>
             <tr>
@@ -671,7 +868,7 @@
       </section>
 
       <section>
-        <h2>7. Recommendation: evolve, do not rebuild</h2>
+        <h2>8. Recommendation: evolve, do not rebuild</h2>
         <p>
           A full rewrite would delay value across many weeks of rework, reintroduce pricing risk, and disrupt builders
           already using the live URL. The existing engine encodes non-trivial domain knowledge: surcharge rules, screen
@@ -687,7 +884,7 @@
       </section>
 
       <section>
-        <h2>8. Delivery plan</h2>
+        <h2>9. Delivery plan</h2>
 
         <div class="phase-block">
           <div class="phase-title">Phase 1: Stabilize and ship registration</div>
@@ -743,7 +940,7 @@
       </section>
 
       <section>
-        <h2>9. Scalability approach</h2>
+        <h2>10. Scalability approach</h2>
         <p>
           Vercel and Supabase are sufficient for thousands of monthly orders without platform migration. Scaling effort
           belongs in application design: server-side validation prevents price tampering, indexed order tables support
@@ -759,7 +956,7 @@
       </section>
 
       <section>
-        <h2>10. Risk summary</h2>
+        <h2>11. Risk summary</h2>
         <table>
           <thead>
             <tr>
@@ -804,7 +1001,7 @@
       </section>
 
       <section>
-        <h2>11. Access required to begin</h2>
+        <h2>12. Access required to begin</h2>
         <p>
           Supabase dashboard and service role for policy review. Vercel project and environment variables. EmailJS
           account for template and quota review. AroFlo credentials for staging integration tests. Product decisions on
@@ -813,7 +1010,7 @@
       </section>
 
       <section>
-        <h2>12. Commercial outcomes of delivery</h2>
+        <h2>13. Commercial outcomes of delivery</h2>
         <p>
           When this work is executed as planned, HSSS gains measurable business capability even before every feature is
           complete. Registration and persistent builder profiles mean you know who is ordering and can approve accounts
