@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HSSS Builder PWA: Specification</title>
+  <style>
+    :root {
+      --navy: #003A70;
+      --navy-deep: #001B3D;
+      --cyan: #00AEEF;
+      --text: #1a1a1a;
+      --muted: #5a6472;
+      --border: #d8dee6;
+      --bg: #f7f9fb;
+      --white: #ffffff;
+      --summary-bg: #eef6fb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    header {
+      background: var(--navy-deep);
+      color: var(--white);
+      padding: 48px 56px 40px;
+    }
+
+    header .label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+
+    header h1 { font-size: 26px; font-weight: 600; line-height: 1.3; margin-bottom: 20px; }
+
+    header .meta {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.8;
+    }
+
+    main { padding: 40px 56px 56px; }
+
+    .summary {
+      background: var(--summary-bg);
+      border-left: 4px solid var(--cyan);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+
+    .summary .tag {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    section { margin-bottom: 32px; }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    ul { margin: 0 0 14px 20px; padding: 0; }
+    li { margin-bottom: 6px; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin: 14px 0 18px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th { background: #f0f4f8; font-weight: 600; color: var(--navy); }
+
+    code {
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 12.5px;
+      background: #f0f4f8;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    footer {
+      padding: 24px 56px 32px;
+      background: #f0f4f8;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      header, main, footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div class="label">Specification</div>
+      <h1>HSSS Builder PWA</h1>
+      <div class="meta">
+        Prepared by Ramil Huertas &nbsp;|&nbsp; June 2025<br />
+        Stack: Next.js, TypeScript, Tailwind CSS, Supabase, Vercel
+      </div>
+    </header>
+
+    <main>
+      <div class="summary">
+        <p>
+          Builder-facing PWA: register, log in, reset password, sign out, price screens, save quotes, submit orders.
+          Orders go to Supabase first, then email to HSSS. Installable from the home screen (manifest + service worker).
+        </p>
+      </div>
+
+      <section>
+        <h2>1. Features</h2>
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Registration</td>
+              <td>Email and password (Supabase Auth). Profile: company name, ABN, contact, service type, region, address. Saved to <code>builders</code>.</td>
+            </tr>
+            <tr>
+              <td>Login</td>
+              <td>Email and password. Session cookies via <code>@supabase/ssr</code>. Routes behind auth redirect to login.</td>
+            </tr>
+            <tr>
+              <td>Forgot password</td>
+              <td>Supabase sends reset link. New password at <code>/auth/reset-password</code>.</td>
+            </tr>
+            <tr>
+              <td>Sign out</td>
+              <td>Header button on dashboard. Ends session, back to login.</td>
+            </tr>
+            <tr>
+              <td>Quotes</td>
+              <td>Live pricing, screen config (Front &amp; Return, Front Only, Splayed, Fixed Panel, Quick Quote). Drafts in Supabase: list, open, delete.</td>
+            </tr>
+            <tr>
+              <td>Orders</td>
+              <td>Submit saves to DB, emails HSSS, shows order ref to builder. Order list + detail. Re-order copies into a new quote.</td>
+            </tr>
+            <tr>
+              <td>Dashboard</td>
+              <td>Company name, New Quote, My Quotes, My Orders, sign out.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>2. Email notifications</h2>
+        <p>Order emails run on the server (Next.js API route), not in the browser. Row is written to the database before the email is sent.</p>
+        <table>
+          <thead>
+            <tr><th>Event</th><th>Recipient</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Order submitted</td><td>HSSS inbox (e.g. bradley@hsss.net.au): job details, screens, prices</td></tr>
+            <tr><td>Order confirmation</td><td>Builder: order reference and summary</td></tr>
+            <tr><td>Password reset / verify</td><td>User: Supabase Auth templates</td></tr>
+          </tbody>
+        </table>
+        <p>Push and SMS are out of scope for the first release.</p>
+      </section>
+
+      <section>
+        <h2>3. Email providers</h2>
+        <p>Auth mail stays on Supabase. Order mail is one of the options below, wired through a shared server module so the provider can be swapped via env vars.</p>
+        <table>
+          <thead>
+            <tr><th>Provider</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Google SMTP</td>
+              <td><code>smtp.gmail.com</code>, port 587, App Password. Works with Google Workspace on <code>@hsss.net.au</code>. Nodemailer on the server. No third-party signup if mail already lives on Google.</td>
+            </tr>
+            <tr>
+              <td>Microsoft 365 SMTP</td>
+              <td><code>smtp.office365.com</code>. Same Nodemailer setup as Google.</td>
+            </tr>
+            <tr>
+              <td>Resend</td>
+              <td>REST API. Free tier caps monthly sends; paid tiers above that.</td>
+            </tr>
+            <tr>
+              <td>SendGrid</td>
+              <td>REST API. Free tier for low volume.</td>
+            </tr>
+            <tr>
+              <td>Postmark</td>
+              <td>REST API. Paid; no real free tier.</td>
+            </tr>
+            <tr>
+              <td>Amazon SES</td>
+              <td>Cheaper at volume. Needs AWS account and domain verification.</td>
+            </tr>
+            <tr>
+              <td>EmailJS</td>
+              <td>Used in the current app from the client. Drop it for the rebuild; orders need server-side send.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Google Workspace on <code>@hsss.net.au</code>: use SMTP. Otherwise Resend or SendGrid.
+          Env vars for SMTP: <code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SMTP_USER</code>, <code>SMTP_PASS</code>, <code>ORDER_EMAIL_FROM</code>, <code>ORDER_EMAIL_TO</code>.
+          API providers use their own keys instead.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. PWA install</h2>
+        <ul>
+          <li>Manifest: app name, icons 192 and 512 (maskable), <code>display: standalone</code>, theme <code>#003A70</code>, start URL points at dashboard.</li>
+          <li>Service worker (Serwist or next-pwa): cache static files; always fetch API and auth over the network.</li>
+          <li>Android: install prompt after first login. iOS: short how-to (Share, Add to Home Screen).</li>
+          <li>Icons in <code>public/</code>: favicon, 192, 512, Apple touch 180.</li>
+          <li><code>/offline</code> page when there is no connection. Drafts sit in Supabase, not on the device.</li>
+          <li>HTTPS on Vercel. Check Lighthouse installability before go-live.</li>
+          <li>Prompt to reload when a new build is deployed.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Stack</h2>
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Technology</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Frontend</td><td>Next.js (App Router), TypeScript, Tailwind CSS</td></tr>
+            <tr><td>Auth + database</td><td>Supabase (Auth, Postgres, RLS, migrations in repo)</td></tr>
+            <tr><td>Hosting</td><td>Vercel, including <code>/api/orders/submit</code></td></tr>
+            <tr><td>Order email</td><td>Google SMTP, Resend, SendGrid, or Postmark (server-side)</td></tr>
+            <tr><td>PWA</td><td>Serwist or next-pwa</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Submit path: client posts to API route, server checks session and pricing, inserts <code>orders</code>, sends email, returns reference.
+          Pricing rules move over from the current <code>App.jsx</code> into <code>lib/pricing</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Database tables</h2>
+        <table>
+          <thead>
+            <tr><th>Table</th><th>Stores</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>builders</code></td><td>Company profile linked to auth user</td></tr>
+            <tr><td><code>quotes</code></td><td>Draft quotes (status: draft)</td></tr>
+            <tr><td><code>orders</code></td><td>Submitted orders with reference number</td></tr>
+            <tr><td><code>order_items</code></td><td>Line items per order</td></tr>
+            <tr><td><code>site_contacts</code></td><td>Saved site contacts per builder</td></tr>
+          </tbody>
+        </table>
+        <p>RLS on every table. Each builder only sees their own rows.</p>
+      </section>
+
+      <section>
+        <h2>7. Not in first release</h2>
+        <p>Staff admin, AroFlo sync, push, SMS, payments.</p>
+      </section>
+    </main>
+
+    <footer>
+      June 2025
+    </footer>
+  </div>
+</body>
+
+</html>
