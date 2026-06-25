@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Order } from "@/types/database";
+import { isCustomOrderPayload } from "@/lib/custom-orders";
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-AU", {
@@ -34,6 +35,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
         <thead className="bg-slate-50 text-slate-600">
           <tr>
             <th className="px-4 py-3 font-medium">Reference</th>
+            <th className="px-4 py-3 font-medium">Type</th>
             <th className="px-4 py-3 font-medium">Job</th>
             <th className="px-4 py-3 font-medium">Date</th>
             <th className="px-4 py-3 font-medium">Status</th>
@@ -41,7 +43,9 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {orders.map((order) => {
+            const isCustom = isCustomOrderPayload(order.payload);
+            return (
             <tr key={order.id} className="border-t border-slate-100">
               <td className="px-4 py-3">
                 <Link
@@ -50,6 +54,9 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                 >
                   {order.reference}
                 </Link>
+              </td>
+              <td className="px-4 py-3 text-slate-600">
+                {isCustom ? "Custom" : order.payload.sample ? "Sample" : "Standard"}
               </td>
               <td className="px-4 py-3 text-slate-600">
                 {order.job_ref ?? "—"}
@@ -61,10 +68,11 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                 {order.status}
               </td>
               <td className="px-4 py-3 text-right font-medium text-slate-900">
-                {formatMoney(order.total)}
+                {isCustom ? "—" : formatMoney(order.total)}
               </td>
             </tr>
-          ))}
+          );
+          })}
         </tbody>
       </table>
     </div>

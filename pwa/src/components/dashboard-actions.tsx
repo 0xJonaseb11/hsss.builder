@@ -12,6 +12,11 @@ const actions = [
     description: "Submit a full job with screens",
   },
   {
+    href: "/orders/custom",
+    title: "Custom order",
+    description: "Non-standard screens, site measure",
+  },
+  {
     href: "/quotes",
     title: "My quotes",
     description: "Saved estimates and order drafts",
@@ -20,6 +25,11 @@ const actions = [
     href: "/orders",
     title: "Order history",
     description: "Submitted orders and status",
+  },
+  {
+    href: "/contact",
+    title: "Contact HSSS",
+    description: "Support and enquiries",
   },
 ];
 

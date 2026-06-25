@@ -50,3 +50,26 @@ export const BRAND = {
   cyan: "#00AEEF",
   muted: "#5A7D9E",
 } as const;
+
+export const HSSS_CONTACTS = [
+  {
+    name: "Bradley",
+    email: "bradley@hsss.net.au",
+    phone: "0481 145 924",
+    role: "Sales",
+  },
+  {
+    name: "Bruce",
+    email: "bruce@hsss.net.au",
+    phone: "0404 126 775",
+    role: "Sales",
+  },
+  {
+    name: "Sam",
+    email: "info@hsss.net.au",
+    phone: "0457 296 652",
+    role: "Scheduling",
+  },
+] as const;
+
+export const HSSS_ORDER_EMAIL = "bradley@hsss.net.au";

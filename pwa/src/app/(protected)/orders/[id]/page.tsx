@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { getOrder, requireBuilderProfile } from "@/lib/data";
 import { formatMoney } from "@/lib/pricing";
+import { isCustomOrderPayload } from "@/lib/custom-orders";
 import type { OrderPayload, OrderScreenPayload } from "@/lib/orders";
 
 function formatDate(value: string) {
@@ -54,6 +55,7 @@ export default async function OrderDetailPage({
   if (!order) notFound();
 
   const payload = order.payload;
+  const isCustom = isCustomOrderPayload(payload);
   const isRealOrder = isOrderPayload(payload);
   const isSample = payload.sample === true;
 
@@ -69,6 +71,9 @@ export default async function OrderDetailPage({
             All orders
           </Link>
           <h1 className="text-xl font-semibold text-navy">{order.reference}</h1>
+          {isCustom && (
+            <p className="mt-1 text-sm text-violet-700">Custom order request</p>
+          )}
           {isSample && (
             <p className="mt-1 text-sm text-amber-700">Sample order</p>
           )}
@@ -84,7 +89,7 @@ export default async function OrderDetailPage({
             <div>
               <p className="text-slate-500">Total</p>
               <p className="font-medium text-slate-900">
-                {formatMoney(order.total)}
+                {isCustom ? "Site measure" : formatMoney(order.total)}
               </p>
             </div>
             <div>
