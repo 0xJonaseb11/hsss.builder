@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { getOrder, requireBuilderProfile } from "@/lib/data";
+import { formatMoney } from "@/lib/pricing";
+import type { OrderPayload, OrderScreenPayload } from "@/lib/orders";
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString("en-AU", {
@@ -14,11 +16,31 @@ function formatDate(value: string) {
   });
 }
 
-function formatMoney(value: number) {
-  return new Intl.NumberFormat("en-AU", {
-    style: "currency",
-    currency: "AUD",
-  }).format(value);
+function isOrderPayload(payload: Record<string, unknown>): payload is OrderPayload {
+  return Array.isArray(payload.screens) && "delivery" in payload;
+}
+
+function ScreenList({ screens }: { screens: OrderScreenPayload[] }) {
+  return (
+    <ul className="divide-y divide-slate-100 rounded-md border border-slate-200">
+      {screens.map((screen, i) => (
+        <li key={`${screen.summary}-${i}`} className="px-4 py-3 text-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-medium text-slate-900">{screen.type}</p>
+              <p className="text-slate-600">{screen.summary}</p>
+              {screen.locationLabel && (
+                <p className="text-slate-500">{screen.locationLabel}</p>
+              )}
+            </div>
+            <p className="shrink-0 font-medium text-slate-900">
+              {formatMoney(screen.priceIncGst)}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export default async function OrderDetailPage({
@@ -30,6 +52,10 @@ export default async function OrderDetailPage({
   const profile = await requireBuilderProfile();
   const order = await getOrder(profile.id, id);
   if (!order) notFound();
+
+  const payload = order.payload;
+  const isRealOrder = isOrderPayload(payload);
+  const isSample = payload.sample === true;
 
   return (
     <>
@@ -43,6 +69,9 @@ export default async function OrderDetailPage({
             All orders
           </Link>
           <h1 className="text-xl font-semibold text-navy">{order.reference}</h1>
+          {isSample && (
+            <p className="mt-1 text-sm text-amber-700">Sample order</p>
+          )}
         </div>
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -72,6 +101,51 @@ export default async function OrderDetailPage({
             </div>
           </div>
         </Card>
+
+        {isRealOrder && (
+          <>
+            <Card className="space-y-3 text-sm">
+              <h2 className="font-semibold text-navy">Delivery</h2>
+              <p className="text-slate-700">
+                {payload.delivery.address}, {payload.delivery.suburb}{" "}
+                {payload.delivery.state}
+              </p>
+              {payload.siteContact && (
+                <p className="text-slate-600">
+                  Site contact: {payload.siteContact.name} —{" "}
+                  {payload.siteContact.phone}
+                </p>
+              )}
+              {payload.serviceType === "Supply & Install" ? (
+                <p className="text-slate-600">
+                  Hob: {payload.deliveryDates.hobDate}, Glass:{" "}
+                  {payload.deliveryDates.glassDate}
+                </p>
+              ) : (
+                <p className="text-slate-600">
+                  Delivery: {payload.deliveryDates.deliveryDate}
+                </p>
+              )}
+              {payload.notes && (
+                <p className="text-slate-600">Notes: {payload.notes}</p>
+              )}
+            </Card>
+            <div className="space-y-3">
+              <h2 className="text-sm font-semibold text-navy">Screens</h2>
+              <ScreenList screens={payload.screens} />
+            </div>
+          </>
+        )}
+
+        {isSample && (
+          <Card className="text-sm text-slate-600">
+            This is a placeholder order for testing. Use{" "}
+            <Link href="/orders/new" className="font-medium text-navy hover:text-cyan">
+              New order
+            </Link>{" "}
+            to submit real job data.
+          </Card>
+        )}
       </main>
     </>
   );

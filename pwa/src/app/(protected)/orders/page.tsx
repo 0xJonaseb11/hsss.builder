@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { OrdersTable } from "@/components/orders-table";
-import { CreateOrderButton } from "@/components/create-order-button";
+import { OrderActions } from "@/components/order-actions";
 import { getOrders, requireBuilderProfile } from "@/lib/data";
 
 export default async function OrdersPage() {
@@ -22,7 +22,7 @@ export default async function OrdersPage() {
             </Link>
             <h1 className="text-xl font-semibold text-navy">Orders</h1>
           </div>
-          <CreateOrderButton />
+          <OrderActions />
         </div>
         <OrdersTable orders={orders} />
       </main>

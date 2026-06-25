@@ -1,7 +1,7 @@
 import { DashboardHeader } from "@/components/dashboard-header";
 import { InstallPrompt } from "@/components/install-prompt";
 import { OrdersTable } from "@/components/orders-table";
-import { CreateOrderButton } from "@/components/create-order-button";
+import { OrderActions } from "@/components/order-actions";
 import { Card } from "@/components/ui/card";
 import { getOrders, requireBuilderProfile } from "@/lib/data";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-lg font-semibold text-navy">Recent orders</h2>
-          <CreateOrderButton />
+          <OrderActions />
         </div>
         <OrdersTable orders={orders.slice(0, 5)} />
         {orders.length > 5 && (
