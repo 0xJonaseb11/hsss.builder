@@ -15,11 +15,12 @@ export function InstallPrompt() {
   const [standalone, setStandalone] = useState(false);
 
   useEffect(() => {
-    const ios =
-      /iphone|ipad|ipod/i.test(navigator.userAgent) &&
-      !(window.navigator as { standalone?: boolean }).standalone;
-    setIsIos(ios);
-    setStandalone(window.matchMedia("(display-mode: standalone)").matches);
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const installed =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as { standalone?: boolean }).standalone === true;
+    setIsIos(ios && !installed);
+    setStandalone(installed);
 
     const handler = (e: Event) => {
       e.preventDefault();
