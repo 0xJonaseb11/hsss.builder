@@ -107,6 +107,33 @@ export default async function OrderDetailPage({
           </div>
         </Card>
 
+        {isCustom && (
+          <Card className="space-y-3 text-sm text-slate-700">
+            <h2 className="font-semibold text-navy">Job</h2>
+            <p>
+              {payload.address}, {payload.suburb} {payload.state}
+            </p>
+            <div>
+              <p className="font-medium text-slate-900">Description</p>
+              <p className="mt-1 whitespace-pre-wrap">{payload.details}</p>
+            </div>
+            {payload.contactName && (
+              <p>
+                Site contact: {payload.contactName}
+                {payload.contactPhone ? ` — ${payload.contactPhone}` : ""}
+              </p>
+            )}
+            <p>
+              Preferred measure date:{" "}
+              {new Date(payload.measureDate).toLocaleDateString("en-AU", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </p>
+          </Card>
+        )}
+
         {isRealOrder && (
           <>
             <Card className="space-y-3 text-sm">
