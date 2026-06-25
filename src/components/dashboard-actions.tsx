@@ -55,17 +55,17 @@ export function DashboardActions() {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-navy">Quick actions</h2>
+        <h2 className="text-lg font-semibold text-navy">Quick actions</h2>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
           Start a quote or order, or jump to your saved work.
         </p>
       </div>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         {featured.map((action) => (
           <ActionTile key={action.href} {...action} />
         ))}
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {rest.map((action) => (
           <ActionTile key={action.href} {...action} />
         ))}

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AppBrand } from "@/components/app-brand";
 import { BackButton } from "@/components/app/back-button";
 import { BottomNav } from "@/components/app/bottom-nav";
 import { NavSheet } from "@/components/app/nav-sheet";
@@ -16,29 +16,24 @@ export function AppChrome({ profile }: { profile: Builder }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const back = getBackNavigation(pathname);
   const title = getPageTitle(pathname);
+  const showCenterTitle = pathname !== "/dashboard";
 
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-3 sm:px-6">
-          <div className="flex min-w-[88px] items-center">
-            {back ? (
-              <BackButton href={back.href} label={back.label} className="px-2.5 py-2" />
-            ) : (
-              <Link
-                href="/dashboard"
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-xs font-bold text-white"
-              >
-                H
-              </Link>
-            )}
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {back && <BackButton href={back.href} label={back.label} compact />}
+            <AppBrand size="header" showSubtitle={false} linkTo="/dashboard" />
           </div>
 
-          <h1 className="flex-1 truncate text-center text-base font-semibold text-navy">
-            {title}
-          </h1>
+          {showCenterTitle && (
+            <h1 className="hidden truncate text-center text-sm font-semibold text-[var(--color-muted)] sm:block sm:max-w-[28%]">
+              {title}
+            </h1>
+          )}
 
-          <div className="flex min-w-[88px] items-center justify-end gap-2">
+          <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
