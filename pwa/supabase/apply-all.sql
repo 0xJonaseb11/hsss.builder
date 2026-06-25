@@ -1,5 +1,3 @@
--- Run in Supabase Dashboard → SQL Editor (project ehoyoozpfvwkfiezfprc)
--- Or: SUPABASE_DB_URL="postgresql://..." npm run db:migrate
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
