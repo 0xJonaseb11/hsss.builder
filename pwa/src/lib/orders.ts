@@ -177,3 +177,45 @@ export function screenDraftToPayload(
 export function orderTotal(screens: OrderScreenPayload[]) {
   return screens.reduce((sum, s) => sum + s.priceIncGst, 0);
 }
+
+export type InitialOrderData = {
+  jobRef?: string;
+  address?: string;
+  suburb?: string;
+  state?: string;
+  notes?: string;
+  siteContactName?: string;
+  siteContactPhone?: string;
+  hobDate?: string;
+  glassDate?: string;
+  deliveryDate?: string;
+  screens?: ScreenDraft[];
+};
+
+export function screenPayloadToDraft(screen: OrderScreenPayload): ScreenDraft {
+  const draft = emptyScreenDraft();
+  draft.type = screen.type;
+  draft.colour = screen.colour;
+  draft.locationLabel = screen.locationLabel;
+  const config = screen.config;
+
+  if (screen.type === "Front & Return") {
+    draft.frontMM = String(config.frontMM ?? 900);
+    draft.returnMM = String(config.returnMM ?? 900);
+    draft.isSliding = Boolean(config.isSliding);
+    if (config.doorMM === 762) draft.doorMM = "762";
+  } else if (screen.type === "Front Only") {
+    draft.w2wMM = String(config.w2wMM ?? 900);
+    draft.frontOnlyStyle =
+      config.style === "panelDoorPanel" ? "panelDoorPanel" : "panelDoor";
+    draft.isSliding = Boolean(config.isSliding);
+    if (config.doorMM === 762) draft.doorMM = "762";
+  } else if (screen.type === "Splayed") {
+    draft.wallA = String(config.wallA ?? 900);
+    draft.wallB = String(config.wallB ?? 900);
+  } else {
+    draft.panelMM = String(config.panelMM ?? 900);
+  }
+
+  return draft;
+}

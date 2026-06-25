@@ -3,11 +3,12 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Builder } from "@/types/database";
-import type { OrderScreenPayload } from "@/lib/orders";
 import {
   emptyScreenDraft,
+  OrderScreenPayload,
   orderTotal,
   screenDraftToPayload,
+  type InitialOrderData,
   type ScreenDraft,
 } from "@/lib/orders";
 import { SCREEN_TYPES } from "@/lib/orders";
@@ -217,22 +218,35 @@ function ScreenEditor({
   );
 }
 
-export function OrderForm({ profile }: { profile: Builder }) {
+export function OrderForm({
+  profile,
+  initial,
+}: {
+  profile: Builder;
+  initial?: InitialOrderData;
+}) {
   const router = useRouter();
   const isSupplyInstall = profile.service_type === "Supply & Install";
-  const [jobRef, setJobRef] = useState("");
-  const [address, setAddress] = useState("");
-  const [suburb, setSuburb] = useState("");
-  const [state, setState] = useState(profile.state ?? "QLD");
-  const [notes, setNotes] = useState("");
-  const [siteContactName, setSiteContactName] = useState(profile.contact_name ?? "");
-  const [siteContactPhone, setSiteContactPhone] = useState(profile.mobile ?? "");
-  const [hobDate, setHobDate] = useState("");
-  const [glassDate, setGlassDate] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
-  const [screens, setScreens] = useState<ScreenDraft[]>([emptyScreenDraft()]);
+  const [jobRef, setJobRef] = useState(initial?.jobRef ?? "");
+  const [address, setAddress] = useState(initial?.address ?? "");
+  const [suburb, setSuburb] = useState(initial?.suburb ?? "");
+  const [state, setState] = useState(initial?.state ?? profile.state ?? "QLD");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [siteContactName, setSiteContactName] = useState(
+    initial?.siteContactName ?? profile.contact_name ?? ""
+  );
+  const [siteContactPhone, setSiteContactPhone] = useState(
+    initial?.siteContactPhone ?? profile.mobile ?? ""
+  );
+  const [hobDate, setHobDate] = useState(initial?.hobDate ?? "");
+  const [glassDate, setGlassDate] = useState(initial?.glassDate ?? "");
+  const [deliveryDate, setDeliveryDate] = useState(initial?.deliveryDate ?? "");
+  const [screens, setScreens] = useState<ScreenDraft[]>(
+    initial?.screens?.length ? initial.screens : [emptyScreenDraft()]
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [savingDraft, setSavingDraft] = useState(false);
 
   const previewScreens = useMemo(() => {
     const built: OrderScreenPayload[] = [];
@@ -252,6 +266,59 @@ export function OrderForm({ profile }: { profile: Builder }) {
 
   function removeScreen(id: string) {
     setScreens((prev) => (prev.length <= 1 ? prev : prev.filter((s) => s.id !== id)));
+  }
+
+  function buildPayload() {
+    return {
+      kind: "order" as const,
+      jobRef: jobRef.trim() || undefined,
+      serviceType: profile.service_type,
+      delivery: { address: address.trim(), suburb: suburb.trim(), state },
+      siteContact:
+        siteContactName.trim() && siteContactPhone.trim()
+          ? { name: siteContactName.trim(), phone: siteContactPhone.trim() }
+          : null,
+      notes: notes.trim() || null,
+      deliveryDates: isSupplyInstall
+        ? { hobDate, glassDate }
+        : { deliveryDate },
+      screens: previewScreens.screens,
+    };
+  }
+
+  async function saveDraft() {
+    setSavingDraft(true);
+    setError(null);
+    if (previewScreens.error) {
+      setError(previewScreens.error);
+      setSavingDraft(false);
+      return;
+    }
+    if (previewScreens.screens.length === 0) {
+      setError("Add at least one screen to save a draft.");
+      setSavingDraft(false);
+      return;
+    }
+    const payload = buildPayload();
+    const res = await fetch("/api/quotes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        quoteKind: "order",
+        label: jobRef.trim() || `Draft · ${previewScreens.screens.length} screens`,
+        total,
+        payload,
+      }),
+    });
+    setSavingDraft(false);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setError(body.error ?? "Could not save draft");
+      return;
+    }
+    const body = await res.json();
+    router.push(`/quotes/${body.id}`);
+    router.refresh();
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -285,19 +352,7 @@ export function OrderForm({ profile }: { profile: Builder }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         jobRef: jobRef.trim(),
-        payload: {
-          serviceType: profile.service_type,
-          delivery: { address: address.trim(), suburb: suburb.trim(), state },
-          siteContact:
-            siteContactName.trim() && siteContactPhone.trim()
-              ? { name: siteContactName.trim(), phone: siteContactPhone.trim() }
-              : null,
-          notes: notes.trim() || null,
-          deliveryDates: isSupplyInstall
-            ? { hobDate, glassDate }
-            : { deliveryDate },
-          screens: previewScreens.screens,
-        },
+        payload: buildPayload(),
       }),
     });
     setLoading(false);
@@ -441,9 +496,20 @@ export function OrderForm({ profile }: { profile: Builder }) {
 
       {error && <Notice variant="error">{error}</Notice>}
 
-      <Button type="submit" full disabled={loading}>
-        {loading ? "Submitting..." : "Submit order"}
-      </Button>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit" full disabled={loading || savingDraft}>
+          {loading ? "Submitting..." : "Submit order"}
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          full
+          disabled={loading || savingDraft}
+          onClick={saveDraft}
+        >
+          {savingDraft ? "Saving..." : "Save draft to quotes"}
+        </Button>
+      </div>
     </form>
   );
 }
