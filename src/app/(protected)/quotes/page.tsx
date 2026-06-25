@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { DashboardHeader } from "@/components/dashboard-header";
 import { QuotesTable } from "@/components/quotes-table";
+import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { getQuotes, requireBuilderProfile } from "@/lib/data";
+
+export const metadata = { title: "Quotes" };
 
 export default async function QuotesPage() {
   const profile = await requireBuilderProfile();
@@ -9,28 +12,17 @@ export default async function QuotesPage() {
   const open = quotes.filter((q) => q.status === "saved");
 
   return (
-    <>
-      <DashboardHeader profile={profile} />
-      <main className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <Link href="/dashboard" className="text-sm text-slate-500 hover:text-navy">
-              Dashboard
-            </Link>
-            <h1 className="text-xl font-semibold text-navy">My quotes</h1>
-            <p className="mt-1 text-sm text-slate-500">
-              {open.length} saved quote{open.length === 1 ? "" : "s"}
-            </p>
-          </div>
-          <Link
-            href="/quotes/quick"
-            className="inline-flex items-center rounded-md bg-cyan px-4 py-2.5 text-sm font-semibold text-navy-deep hover:bg-cyan/90"
-          >
-            Quick quote
+    <main className="app-main space-y-8">
+      <PageHeader
+        title="My quotes"
+        description={`${open.length} saved quote${open.length === 1 ? "" : "s"} ready to review or convert.`}
+        actions={
+          <Link href="/quotes/quick">
+            <Button>Quick quote</Button>
           </Link>
-        </div>
-        <QuotesTable quotes={quotes} />
-      </main>
-    </>
+        }
+      />
+      <QuotesTable quotes={quotes} />
+    </main>
   );
 }

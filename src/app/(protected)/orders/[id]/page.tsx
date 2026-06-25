@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DashboardHeader } from "@/components/dashboard-header";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { Badge } from "@/components/ui/badge";
 import { getOrder, requireBuilderProfile } from "@/lib/data";
 import { formatMoney } from "@/lib/pricing";
 import { isCustomOrderPayload } from "@/lib/custom-orders";
@@ -60,24 +61,28 @@ export default async function OrderDetailPage({
   const isSample = payload.sample === true;
 
   return (
-    <>
-      <DashboardHeader profile={profile} />
-      <main className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        <div>
-          <Link
-            href="/orders"
-            className="text-sm text-slate-500 hover:text-navy"
-          >
-            All orders
-          </Link>
-          <h1 className="text-xl font-semibold text-navy">{order.reference}</h1>
-          {isCustom && (
-            <p className="mt-1 text-sm text-violet-700">Custom order request</p>
-          )}
-          {isSample && (
-            <p className="mt-1 text-sm text-amber-700">Sample order</p>
-          )}
-        </div>
+    <main className="app-main space-y-8">
+      <PageHeader
+        title={order.reference}
+        backHref="/orders"
+        backLabel="All orders"
+        description={
+          isCustom
+            ? "Custom order request"
+            : isSample
+              ? "Sample order"
+              : order.job_ref ?? undefined
+        }
+        actions={
+          <>
+            {isCustom && <Badge variant="info">Custom</Badge>}
+            {isSample && <Badge variant="warning">Sample</Badge>}
+            <Badge variant={order.status === "submitted" ? "success" : "default"}>
+              {order.status}
+            </Badge>
+          </>
+        }
+      />
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
@@ -179,6 +184,5 @@ export default async function OrderDetailPage({
           </Card>
         )}
       </main>
-    </>
   );
 }

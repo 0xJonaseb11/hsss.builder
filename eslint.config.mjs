@@ -19,7 +19,7 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "public/sw.js",
-      "public/sw.js.map",
+      ".vercel/**",
     ],
   },
 ];

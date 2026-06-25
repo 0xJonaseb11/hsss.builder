@@ -1,7 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { AppSerwistProvider } from "@/components/serwist-provider";
 import { APP_DESCRIPTION, APP_NAME, APP_SHORT_NAME, BRAND } from "@/lib/site";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -63,8 +70,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-AU">
-      <body className="min-h-screen antialiased">
+    <html lang="en-AU" className={inter.variable}>
+      <body className="min-h-screen antialiased font-sans">
         <AppSerwistProvider>{children}</AppSerwistProvider>
       </body>
     </html>

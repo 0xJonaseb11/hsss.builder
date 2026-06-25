@@ -1,84 +1,75 @@
-import Link from "next/link";
+import {
+  IconContact,
+  IconCustom,
+  IconHistory,
+  IconOrder,
+  IconQuote,
+} from "@/components/icons";
+import { ActionTile } from "@/components/ui/action-tile";
 
-const primaryActions = [
+const actions = [
   {
     href: "/quotes/quick",
     title: "Quick quote",
-    description: "Price a screen in under a minute",
-    accent: "border-cyan/30 bg-cyan/5",
+    description: "Price a screen in under a minute — no full job required.",
+    icon: <IconQuote />,
+    featured: true,
   },
   {
     href: "/orders/new",
     title: "New order",
-    description: "Submit a full job with screens",
-    accent: "border-navy/20 bg-navy/5",
+    description: "Submit a complete job with screens, delivery, and pricing.",
+    icon: <IconOrder />,
+    featured: true,
   },
-];
-
-const secondaryActions = [
   {
     href: "/orders/custom",
     title: "Custom order",
-    description: "Non-standard screens, site measure",
+    description: "Non-standard screens, site measure, or special requirements.",
+    icon: <IconCustom />,
   },
   {
     href: "/quotes",
     title: "My quotes",
-    description: "Saved estimates and drafts",
+    description: "Review saved estimates and order drafts.",
+    icon: <IconQuote />,
   },
   {
     href: "/orders",
     title: "Order history",
-    description: "Submitted orders and status",
+    description: "Track submitted orders and their current status.",
+    icon: <IconHistory />,
   },
   {
     href: "/contact",
     title: "Contact HSSS",
-    description: "Support and enquiries",
+    description: "Speak with sales or scheduling when you need help.",
+    icon: <IconContact />,
   },
 ];
 
 export function DashboardActions() {
-  return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Start here
-        </h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          {primaryActions.map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className={`rounded-xl border-2 p-5 transition hover:shadow-md ${action.accent}`}
-            >
-              <p className="text-base font-semibold text-navy">{action.title}</p>
-              <p className="mt-1 text-sm text-slate-600">{action.description}</p>
-              <span className="mt-3 inline-block text-sm font-medium text-cyan">
-                Open
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
+  const featured = actions.filter((a) => a.featured);
+  const rest = actions.filter((a) => !a.featured);
 
+  return (
+    <section className="space-y-6">
       <div>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          More actions
-        </h2>
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          {secondaryActions.map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="rounded-lg border border-slate-200 bg-white p-4 transition hover:border-cyan/40 hover:shadow-sm"
-            >
-              <p className="font-semibold text-navy">{action.title}</p>
-              <p className="mt-1 text-xs text-slate-500">{action.description}</p>
-            </Link>
-          ))}
-        </div>
+        <h2 className="text-xl font-semibold text-navy">Quick actions</h2>
+        <p className="mt-1 text-sm text-[var(--color-muted)]">
+          Start a quote or order, or jump to your saved work.
+        </p>
       </div>
-    </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {featured.map((action) => (
+          <ActionTile key={action.href} {...action} />
+        ))}
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {rest.map((action) => (
+          <ActionTile key={action.href} {...action} />
+        ))}
+      </div>
+    </section>
   );
 }

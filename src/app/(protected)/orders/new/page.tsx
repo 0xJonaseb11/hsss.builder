@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { DashboardHeader } from "@/components/dashboard-header";
 import { OrderForm } from "@/components/order-form";
+import { PageHeader } from "@/components/ui/page-header";
 import { getQuote, requireBuilderProfile } from "@/lib/data";
 import {
   isOrderQuotePayload,
@@ -53,30 +52,20 @@ export default async function NewOrderPage({
   }
 
   return (
-    <>
-      <DashboardHeader profile={profile} />
-      <main className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        <div>
-          <Link
-            href="/orders"
-            className="text-sm text-slate-500 hover:text-navy"
-          >
-            Orders
-          </Link>
-          <h1 className="text-xl font-semibold text-navy">New order</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Enter job details and screen sizes. Pricing uses the same rules as
-            the live builder app.
-          </p>
-        </div>
-        {fromQuoteLabel && (
-          <Notice variant="info">
-            Pre-filled from quote {fromQuoteLabel}. Complete job details and
-            submit when ready.
-          </Notice>
-        )}
-        <OrderForm profile={profile} initial={initial} />
-      </main>
-    </>
+    <main className="app-main space-y-8">
+      <PageHeader
+        title="New order"
+        description="Enter job details and screen sizes. Pricing follows the same rules as the live builder app."
+        backHref="/orders"
+        backLabel="Orders"
+      />
+      {fromQuoteLabel && (
+        <Notice variant="info">
+          Pre-filled from quote {fromQuoteLabel}. Complete job details and
+          submit when ready.
+        </Notice>
+      )}
+      <OrderForm profile={profile} initial={initial} />
+    </main>
   );
 }

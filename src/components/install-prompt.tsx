@@ -34,18 +34,16 @@ export function InstallPrompt() {
 
   if (isIos) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
-        <p className="font-medium text-navy">Install this app</p>
-        <p className="mt-1">
-          Tap Share, then Add to Home Screen to install HSSS on your device.
-        </p>
-        <button
-          type="button"
-          onClick={() => setDismissed(true)}
-          className="mt-3 text-sm font-medium text-navy hover:text-cyan"
-        >
+      <div className="app-surface flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-semibold text-navy">Install on your device</p>
+          <p className="mt-1 text-sm text-[var(--color-muted)]">
+            Tap Share, then Add to Home Screen for quick access on site.
+          </p>
+        </div>
+        <Button variant="secondary" type="button" onClick={() => setDismissed(true)}>
           Dismiss
-        </button>
+        </Button>
       </div>
     );
   }
@@ -61,13 +59,16 @@ export function InstallPrompt() {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-slate-700">
-        Install HSSS on your home screen for quick access on site.
-      </p>
+    <div className="app-surface flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="font-semibold text-navy">Install HSSS Builder</p>
+        <p className="mt-1 text-sm text-[var(--color-muted)]">
+          Add to your home screen for one-tap access on the job site.
+        </p>
+      </div>
       <div className="flex gap-2">
         <Button type="button" onClick={install}>
-          Install
+          Install app
         </Button>
         <Button type="button" variant="secondary" onClick={() => setDismissed(true)}>
           Not now

@@ -31,7 +31,7 @@ export function AppBrand({
       <div className="text-left">
         <p
           className={`${titleClass} ${
-            variant === "light" ? "text-white" : "text-cyan"
+            variant === "light" ? "text-white" : "text-navy"
           }`}
         >
           HSSS
