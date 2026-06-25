@@ -61,7 +61,7 @@ export function InstallPrompt() {
   return (
     <div className="app-surface flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="font-semibold text-navy">Install HSSS Builder</p>
+        <p className="font-semibold text-navy">Install HSSS builder</p>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
           Add to your home screen for one-tap access on the job site.
         </p>

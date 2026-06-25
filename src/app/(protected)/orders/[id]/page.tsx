@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { getOrder, requireBuilderProfile } from "@/lib/data";
 import { formatMoney } from "@/lib/pricing";
 import { isCustomOrderPayload } from "@/lib/custom-orders";
+import { EMPTY_CELL } from "@/lib/site";
 import type { OrderPayload, OrderScreenPayload } from "@/lib/orders";
 
 function formatDate(value: string) {
@@ -85,7 +86,7 @@ export default async function OrderDetailPage({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-slate-500">Status</p>
-              <p className="font-medium capitalize text-slate-900">
+              <p className="font-medium text-slate-900">
                 {order.status}
               </p>
             </div>
@@ -98,7 +99,7 @@ export default async function OrderDetailPage({
             <div>
               <p className="text-slate-500">Job reference</p>
               <p className="font-medium text-slate-900">
-                {order.job_ref ?? "—"}
+                {order.job_ref ?? EMPTY_CELL}
               </p>
             </div>
             <div>
@@ -123,7 +124,7 @@ export default async function OrderDetailPage({
             {payload.contactName && (
               <p>
                 Site contact: {payload.contactName}
-                {payload.contactPhone ? ` — ${payload.contactPhone}` : ""}
+                {payload.contactPhone ? `, ${payload.contactPhone}` : ""}
               </p>
             )}
             <p>
@@ -147,7 +148,7 @@ export default async function OrderDetailPage({
               </p>
               {payload.siteContact && (
                 <p className="text-slate-600">
-                  Site contact: {payload.siteContact.name} —{" "}
+                  Site contact: {payload.siteContact.name},{" "}
                   {payload.siteContact.phone}
                 </p>
               )}

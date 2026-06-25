@@ -1,7 +1,7 @@
 {
   "name": "HSSS Builder",
   "short_name": "HSSS",
-  "description": "Order shower screens, run quotes, and manage jobs with HSSS — built for builders on site.",
+  "description": "Order shower screens, run quotes, and manage jobs with HSSS. Built for builders on site.",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",

@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { AppSerwistProvider } from "@/components/serwist-provider";
 import { APP_DESCRIPTION, APP_NAME, APP_SHORT_NAME, BRAND } from "@/lib/site";
 import "./globals.css";
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -70,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-AU" className={inter.variable}>
+    <html lang="en-AU" className={montserrat.variable}>
       <body className="min-h-screen antialiased font-sans">
         <AppSerwistProvider>{children}</AppSerwistProvider>
       </body>

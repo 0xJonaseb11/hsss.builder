@@ -181,7 +181,7 @@ export function ProfileForm({
           You can update these details later from your dashboard.
         </p>
         <Button type="submit" disabled={loading} className="sm:min-w-48">
-          {loading ? "Saving..." : "Open my dashboard"}
+          {loading ? "Saving..." : "open dashboard"}
         </Button>
       </div>
     </form>

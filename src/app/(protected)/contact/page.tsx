@@ -9,7 +9,7 @@ export default async function ContactPage() {
     <main className="app-main space-y-8">
       <PageHeader
         title="Contact HSSS"
-        description="Reach sales or scheduling directly — call or email the right person."
+        description="Reach sales or scheduling directly. Call or email the right person."
       />
 
       <div className="grid gap-4 lg:grid-cols-3">

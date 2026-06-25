@@ -11,7 +11,7 @@ export default async function QuickQuotePage() {
     <main className="app-main space-y-8">
       <PageHeader
         title="Quick quote"
-        description="Get a fast price estimate for a single screen — no full job required."
+        description="Get a fast price estimate for a single screen, no full job required."
       />
       <QuickQuoteForm profile={profile} />
     </main>

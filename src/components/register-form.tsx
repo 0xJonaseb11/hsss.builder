@@ -15,7 +15,7 @@ const nextSteps = [
     detail: "Open the email from HSSS and tap the confirmation link.",
   },
   {
-    title: "Sign in",
+    title: "sign in",
     detail: "Return here and sign in with the email and password you chose.",
   },
   {
@@ -109,7 +109,7 @@ export function RegisterForm() {
               />
             </svg>
           </div>
-          <h2 className="mt-4 text-xl font-semibold text-navy">Check your email</h2>
+          <h2 className="mt-4 text-xl font-semibold text-navy">check your email</h2>
           <p className="mt-2 text-sm text-slate-600">
             We sent a confirmation link to
           </p>
@@ -157,7 +157,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-navy">Create your account</h1>
+        <h1 className="text-xl font-semibold text-navy">create your account</h1>
         <p className="mt-1 text-sm text-slate-500">
           Register to quote and order with HSSS.
         </p>
@@ -193,7 +193,7 @@ export function RegisterForm() {
       <p className="text-center text-sm text-slate-500">
         Already registered?{" "}
         <Link href="/login" className="font-medium text-navy hover:text-cyan">
-          Sign in
+          sign in
         </Link>
       </p>
     </form>

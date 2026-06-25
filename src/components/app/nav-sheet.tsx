@@ -68,7 +68,7 @@ export function NavSheet({
         </div>
 
         <div className="max-h-[70vh] overflow-y-auto p-4">
-          <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">
+          <p className="mb-2 px-1 text-xs font-medium text-[var(--color-muted)]">
             Quick actions
           </p>
           <div className="space-y-1">
@@ -87,7 +87,7 @@ export function NavSheet({
             ))}
           </div>
 
-          <p className="mb-2 mt-6 px-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">
+          <p className="mb-2 mt-6 px-1 text-xs font-medium text-[var(--color-muted)]">
             Navigate
           </p>
           <div className="space-y-1">

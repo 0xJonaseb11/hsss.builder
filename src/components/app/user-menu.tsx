@@ -92,7 +92,7 @@ export function UserMenu({ profile }: { profile: Builder }) {
               onClick={signOut}
               className="mt-1 w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
             >
-              Sign out
+              sign out
             </button>
           </div>
         </div>

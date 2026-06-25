@@ -210,7 +210,7 @@ function ScreenEditor({
       </div>
       {preview && (
         <p className="text-sm text-slate-600">
-          {preview.summary} — <strong>{formatMoney(preview.priceIncGst)}</strong>{" "}
+          {preview.summary}: <strong>{formatMoney(preview.priceIncGst)}</strong>{" "}
           inc GST
         </p>
       )}

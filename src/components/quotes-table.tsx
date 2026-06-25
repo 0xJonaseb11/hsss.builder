@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Quote } from "@/types/database";
 import { formatMoney } from "@/lib/pricing";
 import { isQuickQuotePayload } from "@/lib/quotes";
+import { EMPTY_CELL } from "@/lib/site";
 import { Badge } from "@/components/ui/badge";
 
 function formatDate(value: string) {
@@ -61,10 +62,10 @@ export function QuotesTable({ quotes }: { quotes: Quote[] }) {
                     </Link>
                   </td>
                   <td className="px-5 py-4">
-                    <Badge variant="navy">{isQuick ? "Quick" : "Order draft"}</Badge>
+                    <Badge variant="navy">{isQuick ? "Quick quote" : "Order draft"}</Badge>
                   </td>
                   <td className="px-5 py-4 text-[var(--color-muted)]">
-                    {quote.label ?? "—"}
+                    {quote.label ?? EMPTY_CELL}
                   </td>
                   <td className="px-5 py-4 text-[var(--color-muted)]">
                     {formatDate(quote.created_at)}

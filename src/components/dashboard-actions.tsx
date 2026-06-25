@@ -11,7 +11,7 @@ const actions = [
   {
     href: "/quotes/quick",
     title: "Quick quote",
-    description: "Price a screen in under a minute — no full job required.",
+    description: "Price a screen in under a minute, no full job required.",
     icon: <IconQuote />,
     featured: true,
   },

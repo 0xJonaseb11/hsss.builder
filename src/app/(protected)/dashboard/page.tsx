@@ -17,7 +17,7 @@ export default async function DashboardPage() {
   return (
     <main className="app-main space-y-6">
       <div className="app-surface p-5 sm:p-6">
-        <p className="text-sm font-medium text-[var(--color-muted)]">Welcome back</p>
+        <p className="text-sm font-medium text-[var(--color-muted)]">welcome back</p>
         <h2 className="mt-1 text-2xl font-semibold text-navy">{profile.company_name}</h2>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
           {profile.service_type}
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-navy">Recent quotes</h3>
           <Link href="/quotes" className="text-sm font-semibold text-cyan hover:text-navy">
-            View all
+            view all
           </Link>
         </div>
         <QuotesTable quotes={summary.recentQuotes} />
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-navy">Recent orders</h3>
           <Link href="/orders" className="text-sm font-semibold text-cyan hover:text-navy">
-            View all
+            view all
           </Link>
         </div>
         <OrdersTable orders={summary.recentOrders} />

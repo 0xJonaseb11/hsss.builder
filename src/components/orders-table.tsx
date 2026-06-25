@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Order } from "@/types/database";
 import { isCustomOrderPayload } from "@/lib/custom-orders";
+import { EMPTY_CELL } from "@/lib/site";
 import { Badge } from "@/components/ui/badge";
 
 function formatDate(value: string) {
@@ -67,7 +68,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                     {isCustom ? "Custom" : order.payload.sample ? "Sample" : "Standard"}
                   </td>
                   <td className="px-5 py-4 text-[var(--color-muted)]">
-                    {order.job_ref ?? "—"}
+                    {order.job_ref ?? EMPTY_CELL}
                   </td>
                   <td className="px-5 py-4 text-[var(--color-muted)]">
                     {formatDate(order.created_at)}
@@ -78,7 +79,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                     </Badge>
                   </td>
                   <td className="px-5 py-4 text-right font-semibold text-slate-900">
-                    {isCustom ? "—" : formatMoney(order.total)}
+                    {isCustom ? EMPTY_CELL : formatMoney(order.total)}
                   </td>
                 </tr>
               );

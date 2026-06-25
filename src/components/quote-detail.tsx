@@ -99,7 +99,7 @@ export function QuoteDetailBody({ quote }: { quote: Quote }) {
       <Card className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-slate-500">Type</p>
-          <p className="font-medium capitalize text-slate-900">
+          <p className="font-medium text-slate-900">
             {quote.quote_kind === "quick" ? "Quick quote" : "Order draft"}
           </p>
         </div>
@@ -113,7 +113,7 @@ export function QuoteDetailBody({ quote }: { quote: Quote }) {
         </div>
         <div>
           <p className="text-slate-500">Status</p>
-          <p className="font-medium capitalize text-slate-900">{quote.status}</p>
+          <p className="font-medium text-slate-900">{quote.status}</p>
         </div>
       </Card>
 
