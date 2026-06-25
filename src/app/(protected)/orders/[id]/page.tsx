@@ -64,8 +64,6 @@ export default async function OrderDetailPage({
     <main className="app-main space-y-8">
       <PageHeader
         title={order.reference}
-        backHref="/orders"
-        backLabel="All orders"
         description={
           isCustom
             ? "Custom order request"

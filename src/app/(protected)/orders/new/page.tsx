@@ -56,8 +56,6 @@ export default async function NewOrderPage({
       <PageHeader
         title="New order"
         description="Enter job details and screen sizes. Pricing follows the same rules as the live builder app."
-        backHref="/orders"
-        backLabel="Orders"
       />
       {fromQuoteLabel && (
         <Notice variant="info">

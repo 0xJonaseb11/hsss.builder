@@ -20,8 +20,6 @@ export default async function QuoteDetailPage({
       <PageHeader
         title={quote.reference}
         description={quote.label ?? undefined}
-        backHref="/quotes"
-        backLabel="All quotes"
       />
       <QuoteDetailBody quote={quote} />
       <QuoteDetailActions quote={quote} />

@@ -15,63 +15,39 @@ export default async function DashboardPage() {
   const summary = await getDashboardSummary(profile.id);
 
   return (
-    <main className="app-main space-y-8">
-      <section className="relative overflow-hidden rounded-2xl bg-navy-deep text-white shadow-[var(--shadow-elevated)]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgb(0_174_239/0.2),transparent_55%)]" />
-        <div className="relative border-b border-white/10 px-6 py-8 sm:px-8">
-          <p className="text-sm font-semibold uppercase tracking-wider text-cyan">
-            Welcome back
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            {profile.company_name}
-          </h1>
-          <p className="mt-2 text-base text-slate-300">
-            {profile.service_type}
-            {profile.region ? ` · ${profile.region}` : ""}
-          </p>
-        </div>
-      </section>
+    <main className="app-main space-y-6">
+      <div className="app-surface p-5 sm:p-6">
+        <p className="text-sm font-medium text-[var(--color-muted)]">Welcome back</p>
+        <h2 className="mt-1 text-2xl font-semibold text-navy">{profile.company_name}</h2>
+        <p className="mt-1 text-sm text-[var(--color-muted)]">
+          {profile.service_type}
+          {profile.region ? ` · ${profile.region}` : ""}
+        </p>
+      </div>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Total orders" value={summary.orderTotal} />
+      <section className="grid grid-cols-3 gap-3">
+        <StatCard label="Orders" value={summary.orderTotal} />
         <StatCard label="Submitted" value={summary.ordersSubmitted} />
-        <StatCard label="Saved quotes" value={summary.quotesOpen} />
+        <StatCard label="Quotes" value={summary.quotesOpen} />
       </section>
 
       <InstallPrompt />
-
       <DashboardActions />
 
-      <section className="space-y-4">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold text-navy">Recent quotes</h2>
-            <p className="mt-1 text-sm text-[var(--color-muted)]">
-              Saved estimates and order drafts
-            </p>
-          </div>
-          <Link
-            href="/quotes"
-            className="text-sm font-semibold text-navy hover:text-cyan"
-          >
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-navy">Recent quotes</h3>
+          <Link href="/quotes" className="text-sm font-semibold text-cyan hover:text-navy">
             View all
           </Link>
         </div>
         <QuotesTable quotes={summary.recentQuotes} />
       </section>
 
-      <section className="space-y-4">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold text-navy">Recent orders</h2>
-            <p className="mt-1 text-sm text-[var(--color-muted)]">
-              Latest submissions and status
-            </p>
-          </div>
-          <Link
-            href="/orders"
-            className="text-sm font-semibold text-navy hover:text-cyan"
-          >
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-navy">Recent orders</h3>
+          <Link href="/orders" className="text-sm font-semibold text-cyan hover:text-navy">
             View all
           </Link>
         </div>
