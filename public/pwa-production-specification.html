@@ -116,6 +116,23 @@
       border-radius: 3px;
     }
 
+    .step-block {
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      background: #fafbfc;
+    }
+
+    .step-block .step-title {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .step-block p:last-child { margin-bottom: 0; }
+
     footer {
       padding: 24px 56px 32px;
       background: #f0f4f8;
@@ -145,7 +162,8 @@
       <div class="summary">
         <p>
           Builder-facing PWA: register, log in, reset password, sign out, price screens, save quotes, submit orders.
-          Orders go to Supabase first, then email to HSSS. Installable from the home screen (manifest + service worker).
+          Orders go to Supabase first, then email to HSSS. Installable from the home screen.
+          Delivery is four steps from setup through production deploy (section 2).
         </p>
       </div>
 
@@ -189,81 +207,66 @@
       </section>
 
       <section>
-        <h2>2. Email notifications</h2>
-        <p>Order emails run on the server (Next.js API route), not in the browser. Row is written to the database before the email is sent.</p>
-        <table>
-          <thead>
-            <tr><th>Event</th><th>Recipient</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Order submitted</td><td>HSSS inbox (e.g. bradley@hsss.net.au): job details, screens, prices</td></tr>
-            <tr><td>Order confirmation</td><td>Builder: order reference and summary</td></tr>
-            <tr><td>Password reset / verify</td><td>User: Supabase Auth templates</td></tr>
-          </tbody>
-        </table>
-        <p>Push and SMS are out of scope for the first release.</p>
+        <h2>2. Four steps: development to deployment</h2>
+
+        <div class="step-block">
+          <div class="step-title">Step 1: Project setup</div>
+          <p>Create the Next.js (App Router) repo with TypeScript and Tailwind. Connect Supabase: Auth, Postgres, env vars for local and Vercel.</p>
+          <ul>
+            <li>Migrations in repo: <code>builders</code>, <code>quotes</code>, <code>orders</code>, <code>order_items</code>, <code>site_contacts</code>. RLS on all tables.</li>
+            <li>Folder layout: <code>app/</code>, <code>components/</code>, <code>lib/pricing</code>, <code>lib/email</code>, <code>hooks/</code>.</li>
+            <li>Supabase SSR auth (<code>@supabase/ssr</code>), middleware for protected routes.</li>
+            <li>Port pricing logic from current <code>App.jsx</code> into <code>lib/pricing</code>.</li>
+          </ul>
+          <p><strong>Done when:</strong> app runs locally, login works against Supabase, migrations apply cleanly.</p>
+        </div>
+
+        <div class="step-block">
+          <div class="step-title">Step 2: Core features</div>
+          <p>Build the screens listed in section 1.</p>
+          <ul>
+            <li>Registration + company profile. Login. Forgot password (<code>/auth/reset-password</code>). Sign out on dashboard.</li>
+            <li>Quote flow: screen types, live pricing, save draft, My Quotes list.</li>
+            <li><code>POST /api/orders/submit</code>: validate session and price, insert order in DB, return reference.</li>
+            <li>My Orders list and detail. Re-order into new quote. Dashboard with company name and nav.</li>
+          </ul>
+          <p><strong>Done when:</strong> full quote-to-order path works on localhost with data in Supabase.</p>
+        </div>
+
+        <div class="step-block">
+          <div class="step-title">Step 3: Email and PWA</div>
+          <p>Wire order email on the server after DB insert. Add installable PWA shell.</p>
+          <p><strong>Email</strong> (pick one, env-configured):</p>
+          <table>
+            <thead>
+              <tr><th>Provider</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Google SMTP</td><td><code>smtp.gmail.com</code>, port 587, App Password. Good if <code>@hsss.net.au</code> is on Google Workspace.</td></tr>
+              <tr><td>Microsoft 365 SMTP</td><td><code>smtp.office365.com</code>. Nodemailer, same pattern as Google.</td></tr>
+              <tr><td>Resend / SendGrid / Postmark / SES</td><td>REST API alternatives if SMTP is not used.</td></tr>
+            </tbody>
+          </table>
+          <p>Order submitted: email to HSSS inbox. Confirmation email to builder. Auth emails stay on Supabase templates.</p>
+          <p><strong>PWA:</strong> manifest, icons (192, 512, maskable, Apple 180), service worker (Serwist or next-pwa), <code>/offline</code> page, install prompt on Android, iOS add-to-home instructions, reload banner on new deploy.</p>
+          <p><strong>Done when:</strong> test order emails HSSS inbox, app installs to home screen on phone, Lighthouse installability passes.</p>
+        </div>
+
+        <div class="step-block">
+          <div class="step-title">Step 4: Test and deploy</div>
+          <ul>
+            <li>Deploy preview branch on Vercel. Point Supabase redirect URLs at preview URL for auth testing.</li>
+            <li>Regression on phone (iOS Safari, Android Chrome): register, login, reset password, sign out, one order per screen type, email received.</li>
+            <li>Set production env vars on Vercel (Supabase keys, SMTP or email API, <code>ORDER_EMAIL_TO</code>).</li>
+            <li>Merge to main. Production deploy. Smoke test on live URL.</li>
+            <li>Custom domain when DNS is ready.</li>
+          </ul>
+          <p><strong>Done when:</strong> production URL is live, builders can register and submit orders, emails arrive, PWA installs.</p>
+        </div>
       </section>
 
       <section>
-        <h2>3. Email providers</h2>
-        <p>Auth mail stays on Supabase. Order mail is one of the options below, wired through a shared server module so the provider can be swapped via env vars.</p>
-        <table>
-          <thead>
-            <tr><th>Provider</th><th>Notes</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Google SMTP</td>
-              <td><code>smtp.gmail.com</code>, port 587, App Password. Works with Google Workspace on <code>@hsss.net.au</code>. Nodemailer on the server. No third-party signup if mail already lives on Google.</td>
-            </tr>
-            <tr>
-              <td>Microsoft 365 SMTP</td>
-              <td><code>smtp.office365.com</code>. Same Nodemailer setup as Google.</td>
-            </tr>
-            <tr>
-              <td>Resend</td>
-              <td>REST API. Free tier caps monthly sends; paid tiers above that.</td>
-            </tr>
-            <tr>
-              <td>SendGrid</td>
-              <td>REST API. Free tier for low volume.</td>
-            </tr>
-            <tr>
-              <td>Postmark</td>
-              <td>REST API. Paid; no real free tier.</td>
-            </tr>
-            <tr>
-              <td>Amazon SES</td>
-              <td>Cheaper at volume. Needs AWS account and domain verification.</td>
-            </tr>
-            <tr>
-              <td>EmailJS</td>
-              <td>Used in the current app from the client. Drop it for the rebuild; orders need server-side send.</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          Google Workspace on <code>@hsss.net.au</code>: use SMTP. Otherwise Resend or SendGrid.
-          Env vars for SMTP: <code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SMTP_USER</code>, <code>SMTP_PASS</code>, <code>ORDER_EMAIL_FROM</code>, <code>ORDER_EMAIL_TO</code>.
-          API providers use their own keys instead.
-        </p>
-      </section>
-
-      <section>
-        <h2>4. PWA install</h2>
-        <ul>
-          <li>Manifest: app name, icons 192 and 512 (maskable), <code>display: standalone</code>, theme <code>#003A70</code>, start URL points at dashboard.</li>
-          <li>Service worker (Serwist or next-pwa): cache static files; always fetch API and auth over the network.</li>
-          <li>Android: install prompt after first login. iOS: short how-to (Share, Add to Home Screen).</li>
-          <li>Icons in <code>public/</code>: favicon, 192, 512, Apple touch 180.</li>
-          <li><code>/offline</code> page when there is no connection. Drafts sit in Supabase, not on the device.</li>
-          <li>HTTPS on Vercel. Check Lighthouse installability before go-live.</li>
-          <li>Prompt to reload when a new build is deployed.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>5. Stack</h2>
+        <h2>3. Stack</h2>
         <table>
           <thead>
             <tr><th>Layer</th><th>Technology</th></tr>
@@ -276,31 +279,10 @@
             <tr><td>PWA</td><td>Serwist or next-pwa</td></tr>
           </tbody>
         </table>
-        <p>
-          Submit path: client posts to API route, server checks session and pricing, inserts <code>orders</code>, sends email, returns reference.
-          Pricing rules move over from the current <code>App.jsx</code> into <code>lib/pricing</code>.
-        </p>
       </section>
 
       <section>
-        <h2>6. Database tables</h2>
-        <table>
-          <thead>
-            <tr><th>Table</th><th>Stores</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>builders</code></td><td>Company profile linked to auth user</td></tr>
-            <tr><td><code>quotes</code></td><td>Draft quotes (status: draft)</td></tr>
-            <tr><td><code>orders</code></td><td>Submitted orders with reference number</td></tr>
-            <tr><td><code>order_items</code></td><td>Line items per order</td></tr>
-            <tr><td><code>site_contacts</code></td><td>Saved site contacts per builder</td></tr>
-          </tbody>
-        </table>
-        <p>RLS on every table. Each builder only sees their own rows.</p>
-      </section>
-
-      <section>
-        <h2>7. Not in first release</h2>
+        <h2>4. Not in first release</h2>
         <p>Staff admin, AroFlo sync, push, SMS, payments.</p>
       </section>
     </main>
