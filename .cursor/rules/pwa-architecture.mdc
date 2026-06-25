@@ -1,0 +1,23 @@
+---
+description: HSSS app architecture and folder layout
+globs: src/**/*
+alwaysApply: false
+---
+
+# Architecture
+
+```
+src/
+  app/(auth)/          login, register, reset-password
+  app/(protected)/     dashboard, orders, quotes, contact (middleware-gated)
+  app/api/             server routes for orders, quotes, custom orders
+  components/          UI building blocks
+  lib/supabase/        client, server, middleware helpers
+  lib/constants.ts     regions, service types, HSSS contacts
+  types/               Builder, Order, Quote, OrderStatus
+supabase/migrations/   versioned SQL
+```
+
+- Orders persist in Supabase before any email work.
+- `builders.user_id` links to `auth.users.id`. RLS scopes all builder data.
+- Next.js App Router only — no legacy Vite stack in this repo.

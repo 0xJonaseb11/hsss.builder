@@ -1,0 +1,18 @@
+---
+description: HSSS app (Next.js) coding standards
+globs: src/**/*
+alwaysApply: false
+---
+
+# HSSS app standards
+
+- TypeScript strict. No `any` unless unavoidable at a library boundary.
+- App Router only. Server Components by default; `"use client"` only for forms and browser APIs.
+- Supabase via `@supabase/ssr`. No hardcoded keys. Env vars only.
+- Data access through `lib/` modules and route handlers, not inline in pages.
+- Tailwind for styling. Brand tokens: navy `#003A70`, navy-deep `#001B3D`, cyan `#00AEEF`.
+- No emojis in UI or copy.
+- No code comments unless required for non-obvious external API constraints.
+- No decorative separators, banner comments, or dead code.
+- Components in `components/`, one primary export per file, PascalCase filenames.
+- Keep MVP scope tight: auth, profile, dashboard, orders, quotes, custom orders, contact.
