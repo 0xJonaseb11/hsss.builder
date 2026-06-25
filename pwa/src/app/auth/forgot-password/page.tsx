@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Notice } from "@/components/ui/notice";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export default function ForgotPasswordPage() {
     setError(null);
     const supabase = createClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      email,
+      email.trim(),
       { redirectTo: `${window.location.origin}/auth/reset-password` }
     );
     setLoading(false);
@@ -34,9 +35,12 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
         <h1 className="mb-6 text-xl font-semibold text-navy">Reset password</h1>
         {sent ? (
-          <p className="text-sm text-slate-600">
-            Check your email for a reset link.
-          </p>
+          <Notice variant="success" title="Check your email">
+            <p>
+              If an account exists for <strong>{email}</strong>, you will receive
+              a password reset link shortly.
+            </p>
+          </Notice>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
@@ -46,7 +50,7 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <Notice variant="error">{error}</Notice>}
             <Button type="submit" full disabled={loading}>
               {loading ? "Sending..." : "Send reset link"}
             </Button>

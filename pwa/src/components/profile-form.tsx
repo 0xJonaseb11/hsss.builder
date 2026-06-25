@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 import { REGIONS, SERVICE_TYPES } from "@/lib/constants";
 import type { ServiceType } from "@/types/database";
 
-export function ProfileForm({ userId }: { userId: string }) {
+export function ProfileForm({
+  userId,
+  userEmail,
+}: {
+  userId: string;
+  userEmail: string;
+}) {
   const router = useRouter();
   const [companyName, setCompanyName] = useState("");
   const [abn, setAbn] = useState("");
@@ -32,15 +38,17 @@ export function ProfileForm({ userId }: { userId: string }) {
       {
         user_id: userId,
         company_name: companyName,
-        abn,
+        abn: abn || null,
         contact_name: contactName,
+        contact_email: userEmail || null,
+        contact_phone: mobile,
         mobile,
         service_type: serviceType,
-        region,
-        street_address: streetAddress,
-        suburb,
-        state,
-        postcode,
+        region: serviceType === "Supply & Install" ? region : null,
+        street_address: streetAddress || null,
+        suburb: suburb || null,
+        state: state || null,
+        postcode: postcode || null,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" }

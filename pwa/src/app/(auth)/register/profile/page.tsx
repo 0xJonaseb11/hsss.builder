@@ -13,7 +13,7 @@ export default async function RegisterProfilePage() {
       </div>
       <div className="rounded-lg bg-white p-6 shadow-lg">
         <h1 className="mb-6 text-xl font-semibold text-navy">Your details</h1>
-        <ProfileForm userId={user.id} />
+        <ProfileForm userId={user.id} userEmail={user.email ?? ""} />
       </div>
     </div>
   </div>

@@ -3,37 +3,101 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { authCallbackUrl, isEmailNotConfirmed } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Notice } from "@/components/ui/notice";
 import Link from "next/link";
 
-export function LoginForm() {
+type LoginFormProps = {
+  next?: string;
+  confirmed?: boolean;
+  reason?: string;
+};
+
+export function LoginForm({ next, confirmed, reason }: LoginFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setNeedsConfirmation(false);
+    setResent(false);
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim(),
       password,
     });
     setLoading(false);
     if (signInError) {
+      if (isEmailNotConfirmed(signInError.message)) {
+        setNeedsConfirmation(true);
+        setError(
+          "Confirm your email before signing in. Check your inbox for the HSSS confirmation link."
+        );
+        return;
+      }
       setError(signInError.message);
       return;
     }
-    router.push("/dashboard");
+    const destination =
+      next && next.startsWith("/") && !next.startsWith("//")
+        ? next
+        : "/dashboard";
+    router.push(destination);
     router.refresh();
+  }
+
+  async function resendConfirmation() {
+    if (!email.trim()) {
+      setError("Enter your email address first.");
+      return;
+    }
+    setResending(true);
+    setError(null);
+    setResent(false);
+    const supabase = createClient();
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email: email.trim(),
+      options: {
+        emailRedirectTo: authCallbackUrl("/register/profile"),
+      },
+    });
+    setResending(false);
+    if (resendError) {
+      setError(resendError.message);
+      return;
+    }
+    setResent(true);
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {confirmed && (
+        <Notice variant="success" title="Email confirmed">
+          <p>Your email is verified. Sign in to continue.</p>
+        </Notice>
+      )}
+      {reason === "sign-in" && !confirmed && (
+        <Notice variant="info">Sign in to continue.</Notice>
+      )}
+      {reason === "auth-error" && (
+        <Notice variant="error">
+          That link is invalid or has expired. Sign in or register again.
+        </Notice>
+      )}
+      {resent && (
+        <Notice variant="info">Confirmation email sent. Check your inbox.</Notice>
+      )}
       <Input
         label="Email"
         type="email"
@@ -50,7 +114,18 @@ export function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <Notice variant={needsConfirmation ? "warning" : "error"}>{error}</Notice>}
+      {needsConfirmation && (
+        <Button
+          type="button"
+          variant="secondary"
+          full
+          disabled={resending}
+          onClick={resendConfirmation}
+        >
+          {resending ? "Sending..." : "Resend confirmation email"}
+        </Button>
+      )}
       <Button type="submit" full disabled={loading}>
         {loading ? "Signing in..." : "Sign in"}
       </Button>

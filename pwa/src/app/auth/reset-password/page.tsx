@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Notice } from "@/components/ui/notice";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -24,6 +25,10 @@ export default function ResetPasswordPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
     if (password !== confirm) {
       setError("Passwords do not match");
       return;
@@ -46,9 +51,12 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
         <h1 className="mb-6 text-xl font-semibold text-navy">New password</h1>
         {!ready ? (
-          <p className="text-sm text-slate-600">
-            Open the reset link from your email to continue.
-          </p>
+          <Notice variant="info" title="Open your reset link">
+            <p>
+              Use the link from your email to open this page, then choose a new
+              password.
+            </p>
+          </Notice>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
@@ -65,7 +73,7 @@ export default function ResetPasswordPage() {
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
             />
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <Notice variant="error">{error}</Notice>}
             <Button type="submit" full disabled={loading}>
               {loading ? "Saving..." : "Update password"}
             </Button>

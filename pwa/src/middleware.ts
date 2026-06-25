@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
+    url.searchParams.set("reason", "sign-in");
     return NextResponse.redirect(url);
   }
 

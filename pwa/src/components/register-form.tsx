@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { authCallbackUrl } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Notice } from "@/components/ui/notice";
 import Link from "next/link";
 
 export function RegisterForm() {
@@ -14,6 +16,9 @@ export function RegisterForm() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,12 +32,13 @@ export function RegisterForm() {
     }
     setLoading(true);
     setError(null);
+    setResent(false);
     const supabase = createClient();
-    const { error: signUpError } = await supabase.auth.signUp({
-      email,
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: email.trim(),
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: authCallbackUrl("/register/profile"),
       },
     });
     setLoading(false);
@@ -40,8 +46,68 @@ export function RegisterForm() {
       setError(signUpError.message);
       return;
     }
-    router.push("/register/profile");
-    router.refresh();
+    if (data.session) {
+      router.push("/register/profile");
+      router.refresh();
+      return;
+    }
+    setAwaitingConfirmation(true);
+  }
+
+  async function resendConfirmation() {
+    setResending(true);
+    setError(null);
+    setResent(false);
+    const supabase = createClient();
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email: email.trim(),
+      options: {
+        emailRedirectTo: authCallbackUrl("/register/profile"),
+      },
+    });
+    setResending(false);
+    if (resendError) {
+      setError(resendError.message);
+      return;
+    }
+    setResent(true);
+  }
+
+  if (awaitingConfirmation) {
+    return (
+      <div className="space-y-4">
+        <Notice variant="success" title="Account created">
+          <p>
+            We sent a confirmation link to <strong>{email}</strong>.
+          </p>
+          <ol className="list-decimal space-y-1 pl-4">
+            <li>Open the email from HSSS and tap the confirmation link.</li>
+            <li>Return here and sign in with your password.</li>
+            <li>Complete your company profile to access the dashboard.</li>
+          </ol>
+        </Notice>
+        {resent && (
+          <Notice variant="info">Confirmation email sent again.</Notice>
+        )}
+        {error && <Notice variant="error">{error}</Notice>}
+        <Button
+          type="button"
+          variant="secondary"
+          full
+          disabled={resending}
+          onClick={resendConfirmation}
+        >
+          {resending ? "Sending..." : "Resend confirmation email"}
+        </Button>
+        <p className="text-center text-sm text-slate-500">
+          Already confirmed?{" "}
+          <Link href="/login" className="font-medium text-navy hover:text-cyan">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -70,7 +136,7 @@ export function RegisterForm() {
         value={confirm}
         onChange={(e) => setConfirm(e.target.value)}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <Notice variant="error">{error}</Notice>}
       <Button type="submit" full disabled={loading}>
         {loading ? "Creating account..." : "Continue"}
       </Button>
