@@ -37,5 +37,5 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}${safeNext}`);
   }
 
-  return NextResponse.redirect(`${origin}/register/profile`);
+  return NextResponse.redirect(`${origin}/register/profile?confirmed=1`);
 }

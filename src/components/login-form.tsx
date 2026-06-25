@@ -82,13 +82,20 @@ export function LoginForm({ next, confirmed, reason }: LoginFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <h1 className="text-xl font-semibold text-navy">Sign in</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Access your dashboard, quotes, and orders.
+        </p>
+      </div>
+
       {confirmed && (
         <Notice variant="success" title="Email confirmed">
-          <p>Your email is verified. Sign in to continue.</p>
+          <p>Your email is verified. Sign in to complete your company profile.</p>
         </Notice>
       )}
       {reason === "sign-in" && !confirmed && (
-        <Notice variant="info">Sign in to continue.</Notice>
+        <Notice variant="info">Sign in to continue to your dashboard.</Notice>
       )}
       {reason === "auth-error" && (
         <Notice variant="error">

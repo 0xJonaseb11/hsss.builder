@@ -1,14 +1,21 @@
 {
   "name": "HSSS Builder",
   "short_name": "HSSS",
-  "description": "HSSS builder ordering",
+  "description": "Order shower screens, run quotes, and manage jobs with HSSS — built for builders on site.",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#003A70",
   "background_color": "#001B3D",
+  "categories": ["business", "productivity"],
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",

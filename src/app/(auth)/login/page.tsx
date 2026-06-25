@@ -1,5 +1,9 @@
 import { LoginForm } from "@/components/login-form";
 
+export const metadata = {
+  title: "Sign in",
+};
+
 type SearchParams = Promise<{
   next?: string;
   confirmed?: string;
@@ -14,13 +18,10 @@ export default async function LoginPage({
   const params = await searchParams;
 
   return (
-    <>
-      <h1 className="mb-6 text-xl font-semibold text-navy">Sign in</h1>
-      <LoginForm
-        next={params.next}
-        confirmed={params.confirmed === "1"}
-        reason={params.reason}
-      />
-    </>
+    <LoginForm
+      next={params.next}
+      confirmed={params.confirmed === "1"}
+      reason={params.reason}
+    />
   );
 }
