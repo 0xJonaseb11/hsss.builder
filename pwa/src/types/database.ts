@@ -2,6 +2,23 @@ export type ServiceType = "Supply & Install" | "Supply Only";
 
 export type OrderStatus = "draft" | "submitted" | "confirmed";
 
+export type QuoteKind = "quick" | "order";
+export type QuoteStatus = "saved" | "converted";
+
+export type Quote = {
+  id: string;
+  builder_id: string;
+  reference: string;
+  label: string | null;
+  quote_kind: QuoteKind;
+  status: QuoteStatus;
+  total: number;
+  payload: Record<string, unknown>;
+  order_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Builder = {
   id: string;
   user_id: string;

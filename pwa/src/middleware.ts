@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
-const protectedPaths = ["/dashboard", "/orders", "/register/profile"];
+const protectedPaths = ["/dashboard", "/orders", "/quotes", "/register/profile"];
 
 export async function middleware(request: NextRequest) {
   const response = await updateSession(request);

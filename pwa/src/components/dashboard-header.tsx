@@ -27,6 +27,12 @@ export function DashboardHeader({ profile }: { profile: Builder }) {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/quotes"
+            className="rounded-md px-3 py-2 text-sm font-medium text-cyan hover:bg-white/5"
+          >
+            Quotes
+          </Link>
+          <Link
             href="/orders"
             className="rounded-md px-3 py-2 text-sm font-medium text-cyan hover:bg-white/5"
           >
