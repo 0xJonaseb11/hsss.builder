@@ -41,7 +41,7 @@ export function QuotesTable({ quotes }: { quotes: Quote[] }) {
               <th className="px-5 py-3.5 font-semibold">Type</th>
               <th className="px-5 py-3.5 font-semibold">Label</th>
               <th className="px-5 py-3.5 font-semibold">Date</th>
-              <th className="px-5 py-3.5 text-right font-semibold">Total</th>
+              <th className="px-5 py-3.5 text-right font-semibold">Total (ex GST)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">

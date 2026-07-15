@@ -48,7 +48,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
               <th className="px-5 py-3.5 font-semibold">Job</th>
               <th className="px-5 py-3.5 font-semibold">Date</th>
               <th className="px-5 py-3.5 font-semibold">Status</th>
-              <th className="px-5 py-3.5 text-right font-semibold">Total</th>
+              <th className="px-5 py-3.5 text-right font-semibold">Total (ex GST)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">

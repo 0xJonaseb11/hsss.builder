@@ -9,6 +9,7 @@ import {
   isQuickQuotePayload,
 } from "@/lib/quotes";
 import { formatMoney } from "@/lib/pricing";
+import { screenPriceExGst } from "@/lib/orders";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Notice } from "@/components/ui/notice";
@@ -104,7 +105,7 @@ export function QuoteDetailBody({ quote }: { quote: Quote }) {
           </p>
         </div>
         <div>
-          <p className="text-slate-500">Total</p>
+          <p className="text-slate-500">Total (ex GST)</p>
           <p className="font-medium text-slate-900">{formatMoney(quote.total)}</p>
         </div>
         <div>
@@ -122,6 +123,14 @@ export function QuoteDetailBody({ quote }: { quote: Quote }) {
           <p className="font-semibold text-navy">{payload.summary}</p>
           <p className="mt-2 text-slate-600">
             {payload.serviceType} · {payload.colour}
+          </p>
+          <p className="mt-2 font-medium text-slate-900">
+            {formatMoney(
+              typeof payload.priceExGst === "number"
+                ? payload.priceExGst
+                : screenPriceExGst(payload)
+            )}{" "}
+            <span className="text-xs font-normal text-slate-500">ex GST</span>
           </p>
         </Card>
       )}
@@ -141,9 +150,14 @@ export function QuoteDetailBody({ quote }: { quote: Quote }) {
             <h2 className="text-sm font-semibold text-navy">Screens</h2>
             <ul className="divide-y divide-slate-100 text-sm">
               {payload.screens.map((screen, i) => (
-                <li key={`${screen.summary}-${i}`} className="flex justify-between py-2">
+                <li
+                  key={`${screen.summary}-${i}`}
+                  className="flex justify-between py-2"
+                >
                   <span className="text-slate-700">{screen.summary}</span>
-                  <span className="font-medium">{formatMoney(screen.priceIncGst)}</span>
+                  <span className="font-medium">
+                    {formatMoney(screenPriceExGst(screen))}
+                  </span>
                 </li>
               ))}
             </ul>

@@ -8,211 +8,335 @@ import {
   OrderScreenPayload,
   orderTotal,
   screenDraftToPayload,
+  screenPriceExGst,
   type InitialOrderData,
   type ScreenDraft,
 } from "@/lib/orders";
 import { SCREEN_TYPES } from "@/lib/orders";
 import {
+  ANGLE_HEIGHTS,
   AU_STATES,
   COLOURS,
+  HINGE_SIDES,
   LOCATION_OPTIONS,
+  SWING_DIRECTIONS,
+  type AngleHeight,
 } from "@/lib/constants";
 import { formatMoney } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Notice } from "@/components/ui/notice";
+import { ChoiceChip } from "@/components/ui/choice-chip";
+import { ChipRow, FieldSection, SelectField } from "@/components/ui/field";
+import { ScreenDiagram } from "@/components/screen-diagram";
 
 function ScreenEditor({
   draft,
+  index,
   onChange,
   onRemove,
   serviceType,
+  canRemove,
 }: {
   draft: ScreenDraft;
+  index: number;
   onChange: (draft: ScreenDraft) => void;
   onRemove: () => void;
   serviceType: Builder["service_type"];
+  canRemove: boolean;
 }) {
   const preview = useMemo(() => {
     const result = screenDraftToPayload(draft, serviceType);
     return "error" in result ? null : result;
   }, [draft, serviceType]);
 
+  const showDoorOptions =
+    draft.type === "Front & Return" || draft.type === "Front Only";
+  const showSwing = showDoorOptions && !draft.isSliding;
+
   return (
-    <Card className="space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-semibold text-navy">Screen</p>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="text-sm text-red-600 hover:text-red-700"
-        >
-          Remove
-        </button>
-      </div>
-      <div>
-        <span className="mb-1 block text-sm font-medium text-slate-600">
-          Screen type
-        </span>
-        <select
-          value={draft.type}
-          onChange={(e) =>
-            onChange({ ...draft, type: e.target.value as ScreenDraft["type"] })
-          }
-          className="w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm"
-        >
-          {SCREEN_TYPES.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <span className="mb-1 block text-sm font-medium text-slate-600">
-          Location
-        </span>
-        <select
-          value={draft.locationLabel}
-          onChange={(e) => onChange({ ...draft, locationLabel: e.target.value })}
-          className="w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm"
-        >
-          <option value="">Select location</option>
-          {LOCATION_OPTIONS.map((l) => (
-            <option key={l} value={l}>
-              {l}
-            </option>
-          ))}
-        </select>
-      </div>
-      {draft.type === "Front & Return" && (
-        <div className="grid grid-cols-2 gap-3">
-          <Input
-            label="Front (mm)"
-            type="number"
-            required
-            value={draft.frontMM}
-            onChange={(e) => onChange({ ...draft, frontMM: e.target.value })}
-          />
-          <Input
-            label="Return (mm)"
-            type="number"
-            required
-            value={draft.returnMM}
-            onChange={(e) => onChange({ ...draft, returnMM: e.target.value })}
-          />
+    <Card className="overflow-hidden p-0">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/80 px-5 py-3.5 sm:px-6">
+        <div>
+          <p className="text-sm font-semibold text-navy">
+            Screen {index + 1}
+          </p>
+          <p className="text-xs text-slate-500">{draft.type}</p>
         </div>
-      )}
-      {draft.type === "Front Only" && (
-        <>
-          <div>
-            <span className="mb-1 block text-sm font-medium text-slate-600">
-              Style
-            </span>
-            <select
-              value={draft.frontOnlyStyle}
-              onChange={(e) =>
-                onChange({
-                  ...draft,
-                  frontOnlyStyle: e.target.value as ScreenDraft["frontOnlyStyle"],
-                })
-              }
-              className="w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm"
-            >
-              <option value="panelDoor">Single door</option>
-              <option value="panelDoorPanel">Door + panels</option>
-            </select>
-          </div>
-          <Input
-            label="Wall to wall (mm)"
-            type="number"
-            required
-            value={draft.w2wMM}
-            onChange={(e) => onChange({ ...draft, w2wMM: e.target.value })}
-          />
-        </>
-      )}
-      {draft.type === "Splayed" && (
-        <div className="grid grid-cols-2 gap-3">
-          <Input
-            label="Wall A (mm)"
-            type="number"
-            required
-            value={draft.wallA}
-            onChange={(e) => onChange({ ...draft, wallA: e.target.value })}
-          />
-          <Input
-            label="Wall B (mm)"
-            type="number"
-            required
-            value={draft.wallB}
-            onChange={(e) => onChange({ ...draft, wallB: e.target.value })}
-          />
-        </div>
-      )}
-      {draft.type === "Fixed Panel" && (
-        <Input
-          label="Panel width (mm)"
-          type="number"
-          required
-          value={draft.panelMM}
-          onChange={(e) => onChange({ ...draft, panelMM: e.target.value })}
-        />
-      )}
-      {(draft.type === "Front & Return" || draft.type === "Front Only") && (
-        <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm text-slate-700">
-            <input
-              type="checkbox"
-              checked={draft.isSliding}
-              onChange={(e) => onChange({ ...draft, isSliding: e.target.checked })}
-            />
-            Sliding door
-          </label>
-          {!draft.isSliding && (
-            <div>
-              <span className="mb-1 block text-sm font-medium text-slate-600">
-                Door width
-              </span>
-              <select
-                value={draft.doorMM}
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          >
+            Remove
+          </button>
+        )}
+      </div>
+
+      <div className="grid gap-0 lg:grid-cols-2">
+        {/* Config column */}
+        <div className="space-y-6 border-b border-slate-100 p-5 sm:p-6 lg:border-b-0 lg:border-r">
+          <FieldSection title="Basics">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <SelectField
+                label="Screen type"
+                value={draft.type}
                 onChange={(e) =>
                   onChange({
                     ...draft,
-                    doorMM: e.target.value as ScreenDraft["doorMM"],
+                    type: e.target.value as ScreenDraft["type"],
                   })
                 }
-                className="w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm"
               >
-                <option value="662">662 mm</option>
-                <option value="762">762 mm</option>
-              </select>
+                {SCREEN_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                label="Location"
+                value={draft.locationLabel}
+                onChange={(e) =>
+                  onChange({ ...draft, locationLabel: e.target.value })
+                }
+              >
+                <option value="">Select location</option>
+                {LOCATION_OPTIONS.map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </SelectField>
             </div>
+            <SelectField
+              label="Colour"
+              value={draft.colour}
+              onChange={(e) => onChange({ ...draft, colour: e.target.value })}
+            >
+              {COLOURS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </SelectField>
+          </FieldSection>
+
+          <FieldSection title="Sizes" description="Enter measurements in mm">
+            {draft.type === "Front & Return" && (
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Front (mm)"
+                  type="number"
+                  required
+                  value={draft.frontMM}
+                  onChange={(e) =>
+                    onChange({ ...draft, frontMM: e.target.value })
+                  }
+                />
+                <Input
+                  label="Return (mm)"
+                  type="number"
+                  required
+                  value={draft.returnMM}
+                  onChange={(e) =>
+                    onChange({ ...draft, returnMM: e.target.value })
+                  }
+                />
+              </div>
+            )}
+            {draft.type === "Front Only" && (
+              <>
+                <ChipRow label="Style" columns={3}>
+                  {(
+                    [
+                      ["panelDoor", "Panel + door"],
+                      ["panelDoorPanel", "Door + panels"],
+                      ["doorCentred", "Door centred"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <ChoiceChip
+                      key={value}
+                      selected={draft.frontOnlyStyle === value}
+                      onClick={() =>
+                        onChange({ ...draft, frontOnlyStyle: value })
+                      }
+                      className="px-2 text-xs sm:text-sm"
+                    >
+                      {label}
+                    </ChoiceChip>
+                  ))}
+                </ChipRow>
+                <Input
+                  label="Wall to wall (mm)"
+                  type="number"
+                  required
+                  value={draft.w2wMM}
+                  onChange={(e) =>
+                    onChange({ ...draft, w2wMM: e.target.value })
+                  }
+                />
+              </>
+            )}
+            {draft.type === "Splayed" && (
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Wall A (mm)"
+                  type="number"
+                  required
+                  value={draft.wallA}
+                  onChange={(e) =>
+                    onChange({ ...draft, wallA: e.target.value })
+                  }
+                />
+                <Input
+                  label="Wall B (mm)"
+                  type="number"
+                  required
+                  value={draft.wallB}
+                  onChange={(e) =>
+                    onChange({ ...draft, wallB: e.target.value })
+                  }
+                />
+              </div>
+            )}
+            {draft.type === "Fixed Panel" && (
+              <Input
+                label="Panel width (mm)"
+                type="number"
+                required
+                value={draft.panelMM}
+                onChange={(e) =>
+                  onChange({ ...draft, panelMM: e.target.value })
+                }
+              />
+            )}
+          </FieldSection>
+
+          <FieldSection title="Finish">
+            <ChipRow label="Angle height" columns={3}>
+              {ANGLE_HEIGHTS.map((h) => (
+                <ChoiceChip
+                  key={h}
+                  selected={draft.angleHeight === h}
+                  onClick={() =>
+                    onChange({ ...draft, angleHeight: h as AngleHeight })
+                  }
+                >
+                  {h} mm
+                </ChoiceChip>
+              ))}
+            </ChipRow>
+          </FieldSection>
+
+          {showDoorOptions && (
+            <FieldSection
+              title="Door"
+              description="Choose hinged or sliding, then set handing"
+            >
+              <ChipRow label="Door type">
+                <ChoiceChip
+                  selected={!draft.isSliding}
+                  onClick={() => onChange({ ...draft, isSliding: false })}
+                >
+                  Hinged
+                </ChoiceChip>
+                <ChoiceChip
+                  selected={draft.isSliding}
+                  onClick={() => onChange({ ...draft, isSliding: true })}
+                >
+                  Sliding
+                </ChoiceChip>
+              </ChipRow>
+
+              {showSwing && (
+                <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
+                  <ChipRow label="Door width">
+                    {(["662", "762"] as const).map((w) => (
+                      <ChoiceChip
+                        key={w}
+                        selected={draft.doorMM === w}
+                        onClick={() => onChange({ ...draft, doorMM: w })}
+                      >
+                        {w} mm
+                      </ChoiceChip>
+                    ))}
+                  </ChipRow>
+                  <ChipRow label="Hinge side">
+                    {HINGE_SIDES.map((opt) => (
+                      <ChoiceChip
+                        key={opt.value}
+                        selected={draft.hingeSide === opt.value}
+                        onClick={() =>
+                          onChange({ ...draft, hingeSide: opt.value })
+                        }
+                      >
+                        {opt.label}
+                      </ChoiceChip>
+                    ))}
+                  </ChipRow>
+                  <ChipRow label="Door swing">
+                    {SWING_DIRECTIONS.map((opt) => (
+                      <ChoiceChip
+                        key={opt.value}
+                        selected={draft.swingDirection === opt.value}
+                        onClick={() =>
+                          onChange({
+                            ...draft,
+                            swingDirection: opt.value,
+                          })
+                        }
+                      >
+                        {opt.label}
+                      </ChoiceChip>
+                    ))}
+                  </ChipRow>
+                </div>
+              )}
+            </FieldSection>
           )}
         </div>
-      )}
-      <div>
-        <span className="mb-1 block text-sm font-medium text-slate-600">
-          Colour
-        </span>
-        <select
-          value={draft.colour}
-          onChange={(e) => onChange({ ...draft, colour: e.target.value })}
-          className="w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm"
-        >
-          {COLOURS.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+
+        {/* Diagram column — first on mobile so builders see the plan early */}
+        <div className="order-first bg-slate-50/40 p-4 sm:p-5 lg:order-none lg:sticky lg:top-20 lg:self-start">
+          <ScreenDiagram
+            type={draft.type}
+            frontOnlyStyle={draft.frontOnlyStyle}
+            isSliding={draft.isSliding}
+            hingeSide={draft.hingeSide}
+            swingDirection={draft.swingDirection}
+            angleHeight={draft.angleHeight}
+            frontMM={draft.frontMM}
+            returnMM={draft.returnMM}
+            w2wMM={draft.w2wMM}
+            panelMM={draft.panelMM}
+            wallA={draft.wallA}
+            wallB={draft.wallB}
+          />
+        </div>
       </div>
+
       {preview && (
-        <p className="text-sm text-slate-600">
-          {preview.summary}: <strong>{formatMoney(preview.priceIncGst)}</strong>{" "}
-          inc GST
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-3 border-t border-slate-100 bg-gradient-to-br from-white to-cyan-soft/40 px-5 py-4 sm:px-6">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Screen total
+            </p>
+            <p className="mt-0.5 truncate text-sm text-slate-600">
+              {preview.summary}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-xl font-semibold text-navy">
+              {formatMoney(screenPriceExGst(preview))}
+            </p>
+            <p className="text-xs text-slate-500">
+              ex GST · {formatMoney(preview.priceIncGst)} inc
+            </p>
+          </div>
+        </div>
       )}
     </Card>
   );
@@ -252,7 +376,8 @@ export function OrderForm({
     const built: OrderScreenPayload[] = [];
     for (const draft of screens) {
       const result = screenDraftToPayload(draft, profile.service_type);
-      if ("error" in result) return { error: result.error, screens: [] as OrderScreenPayload[] };
+      if ("error" in result)
+        return { error: result.error, screens: [] as OrderScreenPayload[] };
       built.push(result);
     }
     return { error: null as string | null, screens: built };
@@ -265,7 +390,9 @@ export function OrderForm({
   }
 
   function removeScreen(id: string) {
-    setScreens((prev) => (prev.length <= 1 ? prev : prev.filter((s) => s.id !== id)));
+    setScreens((prev) =>
+      prev.length <= 1 ? prev : prev.filter((s) => s.id !== id)
+    );
   }
 
   function buildPayload() {
@@ -305,7 +432,8 @@ export function OrderForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         quoteKind: "order",
-        label: jobRef.trim() || `Draft · ${previewScreens.screens.length} screens`,
+        label:
+          jobRef.trim() || `Draft · ${previewScreens.screens.length} screens`,
         total,
         payload,
       }),
@@ -474,10 +602,12 @@ export function OrderForm({
             Add screen
           </Button>
         </div>
-        {screens.map((draft) => (
+        {screens.map((draft, index) => (
           <ScreenEditor
             key={draft.id}
             draft={draft}
+            index={index}
+            canRemove={screens.length > 1}
             serviceType={profile.service_type}
             onChange={(next) => updateScreen(draft.id, next)}
             onRemove={() => removeScreen(draft.id)}
@@ -487,7 +617,7 @@ export function OrderForm({
 
       <Card>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-600">Order total (inc GST)</span>
+          <span className="text-sm text-slate-600">Order total (ex GST)</span>
           <span className="text-xl font-semibold text-navy">
             {formatMoney(total)}
           </span>

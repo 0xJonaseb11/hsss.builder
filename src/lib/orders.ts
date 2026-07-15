@@ -1,5 +1,6 @@
-import type { ServiceType } from "@/types/database";
+import type { AngleHeight, HingeSide, SwingDirection } from "@/lib/constants";
 import { calcPrice } from "@/lib/pricing";
+import type { ServiceType } from "@/types/database";
 
 export const SCREEN_TYPES = [
   "Front & Return",
@@ -10,11 +11,16 @@ export const SCREEN_TYPES = [
 
 export type ScreenType = (typeof SCREEN_TYPES)[number];
 
+export type FrontOnlyStyle = "panelDoor" | "panelDoorPanel" | "doorCentred";
+
 export type OrderScreenPayload = {
   type: ScreenType;
   colour: string;
   locationLabel: string;
   summary: string;
+  /** Primary price for builders (ex GST). Optional on legacy rows. */
+  priceExGst?: number;
+  /** Kept for email / accounting; not primary in UI. */
   priceIncGst: number;
   config: Record<string, unknown>;
 };
@@ -65,9 +71,12 @@ export type ScreenDraft = {
   wallA: string;
   wallB: string;
   panelMM: string;
-  frontOnlyStyle: "panelDoor" | "panelDoorPanel";
+  frontOnlyStyle: FrontOnlyStyle;
   isSliding: boolean;
   doorMM: "662" | "762";
+  angleHeight: AngleHeight;
+  hingeSide: HingeSide;
+  swingDirection: SwingDirection;
 };
 
 export function emptyScreenDraft(): ScreenDraft {
@@ -85,7 +94,28 @@ export function emptyScreenDraft(): ScreenDraft {
     frontOnlyStyle: "panelDoor",
     isSliding: false,
     doorMM: "662",
+    angleHeight: "42",
+    hingeSide: "left",
+    swingDirection: "out",
   };
+}
+
+function hasHingedDoor(draft: ScreenDraft) {
+  return (
+    (draft.type === "Front & Return" || draft.type === "Front Only") &&
+    !draft.isSliding
+  );
+}
+
+function angleLabel(height: AngleHeight) {
+  return `${height}mm angle`;
+}
+
+function swingLabel(draft: ScreenDraft) {
+  if (!hasHingedDoor(draft)) return draft.isSliding ? "Slide" : "";
+  const hinge = draft.hingeSide === "left" ? "HL" : "HR";
+  const swing = draft.swingDirection === "out" ? "out" : "in";
+  return `${draft.doorMM}mm ${hinge} ${swing}`;
 }
 
 export function screenDraftToPayload(
@@ -94,6 +124,12 @@ export function screenDraftToPayload(
 ): OrderScreenPayload | { error: string } {
   const doorMM = draft.isSliding ? undefined : Number(draft.doorMM);
   const colour = draft.colour;
+  const angleHeight = draft.angleHeight;
+  const hingeSide = draft.hingeSide;
+  const swingDirection = draft.swingDirection;
+  const doorMeta = hasHingedDoor(draft)
+    ? { hingeSide, swingDirection }
+    : { hingeSide: null, swingDirection: null };
 
   if (draft.type === "Front & Return") {
     const frontMM = Number(draft.frontMM);
@@ -104,36 +140,52 @@ export function screenDraftToPayload(
       { frontMM, returnMM, colour, isSliding: draft.isSliding, doorMM },
       serviceType
     );
+    const doorPart = draft.isSliding ? "Slide" : swingLabel(draft);
     return {
       type: draft.type,
       colour,
       locationLabel: draft.locationLabel,
-      summary: `F&R ${frontMM}×${returnMM} ${draft.isSliding ? "Slide" : `${doorMM}mm`} ${colour}`,
+      summary: `F&R ${frontMM}×${returnMM} ${doorPart} ${angleLabel(angleHeight)} ${colour}`,
+      priceExGst: price.exGst,
       priceIncGst: price.incGst,
-      config: { frontMM, returnMM, isSliding: draft.isSliding, doorMM: doorMM ?? null },
+      config: {
+        frontMM,
+        returnMM,
+        isSliding: draft.isSliding,
+        doorMM: doorMM ?? null,
+        angleHeight,
+        ...doorMeta,
+      },
     };
   }
 
   if (draft.type === "Front Only") {
     const w2wMM = Number(draft.w2wMM);
     if (!w2wMM) return { error: "Enter wall-to-wall size." };
-    const priceKey = draft.frontOnlyStyle;
+    const priceKey =
+      draft.frontOnlyStyle === "panelDoorPanel"
+        ? "panelDoorPanel"
+        : "panelDoor";
     const price = calcPrice(
       priceKey,
       { w2wMM, colour, isSliding: draft.isSliding, doorMM },
       serviceType
     );
+    const doorPart = draft.isSliding ? "Slide" : swingLabel(draft);
     return {
       type: draft.type,
       colour,
       locationLabel: draft.locationLabel,
-      summary: `FO ${w2wMM}mm ${draft.isSliding ? "Slide" : `${doorMM}mm`} ${colour}`,
+      summary: `FO ${w2wMM}mm ${doorPart} ${angleLabel(angleHeight)} ${colour}`,
+      priceExGst: price.exGst,
       priceIncGst: price.incGst,
       config: {
         w2wMM,
         style: draft.frontOnlyStyle,
         isSliding: draft.isSliding,
         doorMM: doorMM ?? null,
+        angleHeight,
+        ...doorMeta,
       },
     };
   }
@@ -151,9 +203,10 @@ export function screenDraftToPayload(
       type: draft.type,
       colour,
       locationLabel: draft.locationLabel,
-      summary: `Splayed ${wallA}×${wallB} ${colour}`,
+      summary: `Splayed ${wallA}×${wallB} ${angleLabel(angleHeight)} ${colour}`,
+      priceExGst: price.exGst,
       priceIncGst: price.incGst,
-      config: { wallA, wallB },
+      config: { wallA, wallB, angleHeight },
     };
   }
 
@@ -168,14 +221,27 @@ export function screenDraftToPayload(
     type: draft.type,
     colour,
     locationLabel: draft.locationLabel,
-    summary: `Fixed panel ${panelMM}mm ${colour}`,
+    summary: `Fixed panel ${panelMM}mm ${angleLabel(angleHeight)} ${colour}`,
+    priceExGst: price.exGst,
     priceIncGst: price.incGst,
-    config: { panelMM },
+    config: { panelMM, angleHeight },
   };
 }
 
+/** Totals are always ex GST for builders. */
 export function orderTotal(screens: OrderScreenPayload[]) {
-  return screens.reduce((sum, s) => sum + s.priceIncGst, 0);
+  return screens.reduce((sum, s) => sum + screenPriceExGst(s), 0);
+}
+
+/** Resolve ex GST for new and legacy payloads. */
+export function screenPriceExGst(screen: {
+  priceExGst?: number;
+  priceIncGst?: number;
+}) {
+  if (typeof screen.priceExGst === "number") return screen.priceExGst;
+  if (typeof screen.priceIncGst === "number")
+    return Math.round((screen.priceIncGst / 1.1) * 100) / 100;
+  return 0;
 }
 
 export type InitialOrderData = {
@@ -192,12 +258,29 @@ export type InitialOrderData = {
   screens?: ScreenDraft[];
 };
 
+function parseAngleHeight(value: unknown): AngleHeight {
+  if (value === "21" || value === "42" || value === "60") return value;
+  return "42";
+}
+
+function parseHingeSide(value: unknown): HingeSide {
+  return value === "right" ? "right" : "left";
+}
+
+function parseSwingDirection(value: unknown): SwingDirection {
+  return value === "in" ? "in" : "out";
+}
+
 export function screenPayloadToDraft(screen: OrderScreenPayload): ScreenDraft {
   const draft = emptyScreenDraft();
   draft.type = screen.type;
   draft.colour = screen.colour;
   draft.locationLabel = screen.locationLabel;
   const config = screen.config;
+
+  draft.angleHeight = parseAngleHeight(config.angleHeight);
+  draft.hingeSide = parseHingeSide(config.hingeSide);
+  draft.swingDirection = parseSwingDirection(config.swingDirection);
 
   if (screen.type === "Front & Return") {
     draft.frontMM = String(config.frontMM ?? 900);
@@ -207,7 +290,11 @@ export function screenPayloadToDraft(screen: OrderScreenPayload): ScreenDraft {
   } else if (screen.type === "Front Only") {
     draft.w2wMM = String(config.w2wMM ?? 900);
     draft.frontOnlyStyle =
-      config.style === "panelDoorPanel" ? "panelDoorPanel" : "panelDoor";
+      config.style === "panelDoorPanel"
+        ? "panelDoorPanel"
+        : config.style === "doorCentred"
+          ? "doorCentred"
+          : "panelDoor";
     draft.isSliding = Boolean(config.isSliding);
     if (config.doorMM === 762) draft.doorMM = "762";
   } else if (screen.type === "Splayed") {

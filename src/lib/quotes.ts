@@ -7,6 +7,7 @@ export type QuickQuotePayload = {
   screenKey: "frontReturn" | "frontOnly" | "splayed" | "fixedPanel";
   colour: string;
   summary: string;
+  priceExGst?: number;
   priceIncGst: number;
   config: Record<string, unknown>;
 };
@@ -51,11 +52,16 @@ export function screenFromQuickQuote(
     splayed: "Splayed",
     fixedPanel: "Fixed Panel",
   } as const;
+  const priceExGst =
+    typeof payload.priceExGst === "number"
+      ? payload.priceExGst
+      : Math.round((payload.priceIncGst / 1.1) * 100) / 100;
   return {
     type: typeMap[payload.screenKey],
     colour: payload.colour,
     locationLabel: "",
     summary: payload.summary,
+    priceExGst,
     priceIncGst: payload.priceIncGst,
     config: payload.config,
   };

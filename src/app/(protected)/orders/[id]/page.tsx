@@ -5,9 +5,16 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { getOrder, requireBuilderProfile } from "@/lib/data";
 import { formatMoney } from "@/lib/pricing";
+import {
+  screenPriceExGst,
+  type FrontOnlyStyle,
+  type OrderPayload,
+  type OrderScreenPayload,
+} from "@/lib/orders";
 import { isCustomOrderPayload } from "@/lib/custom-orders";
 import { EMPTY_CELL } from "@/lib/site";
-import type { OrderPayload, OrderScreenPayload } from "@/lib/orders";
+import { ScreenDiagram } from "@/components/screen-diagram";
+import type { HingeSide, SwingDirection } from "@/lib/constants";
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString("en-AU", {
@@ -25,23 +32,83 @@ function isOrderPayload(payload: Record<string, unknown>): payload is OrderPaylo
 
 function ScreenList({ screens }: { screens: OrderScreenPayload[] }) {
   return (
-    <ul className="divide-y divide-slate-100 rounded-md border border-slate-200">
-      {screens.map((screen, i) => (
-        <li key={`${screen.summary}-${i}`} className="px-4 py-3 text-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="font-medium text-slate-900">{screen.type}</p>
-              <p className="text-slate-600">{screen.summary}</p>
-              {screen.locationLabel && (
-                <p className="text-slate-500">{screen.locationLabel}</p>
+    <ul className="space-y-4">
+      {screens.map((screen, i) => {
+        const config = screen.config;
+        const showDiagram =
+          screen.type === "Front & Return" ||
+          screen.type === "Front Only" ||
+          screen.type === "Splayed" ||
+          screen.type === "Fixed Panel";
+        return (
+          <li
+            key={`${screen.summary}-${i}`}
+            className="rounded-md border border-slate-200 px-4 py-3 text-sm"
+          >
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-slate-900">{screen.type}</p>
+                <p className="text-slate-600">{screen.summary}</p>
+                {screen.locationLabel && (
+                  <p className="text-slate-500">{screen.locationLabel}</p>
+                )}
+                <p className="mt-2 font-medium text-slate-900">
+                  {formatMoney(screenPriceExGst(screen))}{" "}
+                  <span className="text-xs font-normal text-slate-500">
+                    ex GST
+                  </span>
+                </p>
+              </div>
+              {showDiagram && (
+                <div className="w-full max-w-xs shrink-0">
+                  <ScreenDiagram
+                    type={screen.type}
+                    frontOnlyStyle={
+                      (config.style as FrontOnlyStyle) ?? "panelDoor"
+                    }
+                    isSliding={Boolean(config.isSliding)}
+                    hingeSide={
+                      (config.hingeSide as HingeSide) === "right"
+                        ? "right"
+                        : "left"
+                    }
+                    swingDirection={
+                      (config.swingDirection as SwingDirection) === "in"
+                        ? "in"
+                        : "out"
+                    }
+                    angleHeight={
+                      config.angleHeight != null
+                        ? String(config.angleHeight)
+                        : undefined
+                    }
+                    frontMM={
+                      config.frontMM != null ? String(config.frontMM) : undefined
+                    }
+                    returnMM={
+                      config.returnMM != null
+                        ? String(config.returnMM)
+                        : undefined
+                    }
+                    w2wMM={
+                      config.w2wMM != null ? String(config.w2wMM) : undefined
+                    }
+                    panelMM={
+                      config.panelMM != null ? String(config.panelMM) : undefined
+                    }
+                    wallA={
+                      config.wallA != null ? String(config.wallA) : undefined
+                    }
+                    wallB={
+                      config.wallB != null ? String(config.wallB) : undefined
+                    }
+                  />
+                </div>
               )}
             </div>
-            <p className="shrink-0 font-medium text-slate-900">
-              {formatMoney(screen.priceIncGst)}
-            </p>
-          </div>
-        </li>
-      ))}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -91,7 +158,7 @@ export default async function OrderDetailPage({
               </p>
             </div>
             <div>
-              <p className="text-slate-500">Total</p>
+              <p className="text-slate-500">Total (ex GST)</p>
               <p className="font-medium text-slate-900">
                 {isCustom ? "Site measure" : formatMoney(order.total)}
               </p>

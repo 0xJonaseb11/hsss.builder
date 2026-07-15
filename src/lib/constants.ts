@@ -20,6 +20,22 @@ export const COLOURS = [
   "Brushed Brass",
 ] as const;
 
+//  Shower angle / waterstop height options (mm)
+export const ANGLE_HEIGHTS = ["21", "42", "60"] as const;
+export type AngleHeight = (typeof ANGLE_HEIGHTS)[number];
+
+export const HINGE_SIDES = [
+  { value: "left", label: "Hinge left" },
+  { value: "right", label: "Hinge right" },
+] as const;
+export type HingeSide = (typeof HINGE_SIDES)[number]["value"];
+
+export const SWING_DIRECTIONS = [
+  { value: "out", label: "Swing out" },
+  { value: "in", label: "Swing in" },
+] as const;
+export type SwingDirection = (typeof SWING_DIRECTIONS)[number]["value"];
+
 export const AU_STATES = ["QLD", "NSW", "VIC", "SA", "WA", "TAS", "NT", "ACT"] as const;
 
 export const SPLAYED_SIZES = [
