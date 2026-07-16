@@ -5,20 +5,26 @@ import { useRouter } from "next/navigation";
 import type { Builder } from "@/types/database";
 import {
   emptyScreenDraft,
+  frontOnlyW2w,
   OrderScreenPayload,
   orderTotal,
   screenDraftToPayload,
   screenPriceExGst,
+  SCREEN_TYPES,
   type InitialOrderData,
   type ScreenDraft,
 } from "@/lib/orders";
-import { SCREEN_TYPES } from "@/lib/orders";
 import {
   ANGLE_HEIGHTS,
   AU_STATES,
   COLOURS,
+  FIXED_STYLES,
   HINGE_SIDES,
   LOCATION_OPTIONS,
+  RETURN_SIDES,
+  SIDE_PANEL_PRESETS,
+  SIDES,
+  SPLAYED_SIZES,
   SWING_DIRECTIONS,
   type AngleHeight,
 } from "@/lib/constants";
@@ -53,7 +59,12 @@ function ScreenEditor({
 
   const showDoorOptions =
     draft.type === "Front & Return" || draft.type === "Front Only";
-  const showSwing = showDoorOptions && !draft.isSliding;
+  const showSwing =
+    (showDoorOptions && !draft.isSliding) || draft.type === "Splayed";
+  const foW2w =
+    draft.type === "Front Only" && draft.frontOnlyStyle === "panelDoorPanel"
+      ? frontOnlyW2w(draft)
+      : Number(draft.w2wMM) || 0;
 
   return (
     <Card className="overflow-hidden p-0">
@@ -76,7 +87,6 @@ function ScreenEditor({
       </div>
 
       <div className="grid gap-0 lg:grid-cols-2">
-        {/* Config column */}
         <div className="space-y-6 border-b border-slate-100 p-5 sm:p-6 lg:border-b-0 lg:border-r">
           <FieldSection title="Basics">
             <div className="grid gap-3 sm:grid-cols-2">
@@ -124,94 +134,280 @@ function ScreenEditor({
             </SelectField>
           </FieldSection>
 
-          <FieldSection title="Sizes" description="Enter measurements in mm">
+          <FieldSection title="Layout & sizes" description="All sizes in mm - plan view">
             {draft.type === "Front & Return" && (
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Front (mm)"
-                  type="number"
-                  required
-                  value={draft.frontMM}
-                  onChange={(e) =>
-                    onChange({ ...draft, frontMM: e.target.value })
-                  }
-                />
-                <Input
-                  label="Return (mm)"
-                  type="number"
-                  required
-                  value={draft.returnMM}
-                  onChange={(e) =>
-                    onChange({ ...draft, returnMM: e.target.value })
-                  }
-                />
-              </div>
-            )}
-            {draft.type === "Front Only" && (
               <>
-                <ChipRow label="Style" columns={3}>
-                  {(
-                    [
-                      ["panelDoor", "Panel + door"],
-                      ["panelDoorPanel", "Door + panels"],
-                      ["doorCentred", "Door centred"],
-                    ] as const
-                  ).map(([value, label]) => (
+                <ChipRow label="Return side">
+                  {RETURN_SIDES.map((opt) => (
                     <ChoiceChip
-                      key={value}
-                      selected={draft.frontOnlyStyle === value}
+                      key={opt.value}
+                      selected={draft.returnSide === opt.value}
                       onClick={() =>
-                        onChange({ ...draft, frontOnlyStyle: value })
+                        onChange({ ...draft, returnSide: opt.value })
                       }
-                      className="px-2 text-xs sm:text-sm"
                     >
-                      {label}
+                      {opt.label}
                     </ChoiceChip>
                   ))}
                 </ChipRow>
-                <Input
-                  label="Wall to wall (mm)"
-                  type="number"
-                  required
-                  value={draft.w2wMM}
-                  onChange={(e) =>
-                    onChange({ ...draft, w2wMM: e.target.value })
-                  }
-                />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    label="Front (mm)"
+                    type="number"
+                    required
+                    value={draft.frontMM}
+                    onChange={(e) =>
+                      onChange({ ...draft, frontMM: e.target.value })
+                    }
+                  />
+                  <Input
+                    label="Return (mm)"
+                    type="number"
+                    required
+                    value={draft.returnMM}
+                    onChange={(e) =>
+                      onChange({ ...draft, returnMM: e.target.value })
+                    }
+                  />
+                </div>
               </>
             )}
-            {draft.type === "Splayed" && (
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Wall A (mm)"
-                  type="number"
-                  required
-                  value={draft.wallA}
-                  onChange={(e) =>
-                    onChange({ ...draft, wallA: e.target.value })
-                  }
-                />
-                <Input
-                  label="Wall B (mm)"
-                  type="number"
-                  required
-                  value={draft.wallB}
-                  onChange={(e) =>
-                    onChange({ ...draft, wallB: e.target.value })
-                  }
-                />
-              </div>
+
+            {draft.type === "Front Only" && (
+              <>
+                <ChipRow label="Style">
+                  <ChoiceChip
+                    selected={draft.frontOnlyStyle === "panelDoor"}
+                    onClick={() =>
+                      onChange({ ...draft, frontOnlyStyle: "panelDoor" })
+                    }
+                  >
+                    Panel + door
+                  </ChoiceChip>
+                  <ChoiceChip
+                    selected={draft.frontOnlyStyle === "panelDoorPanel"}
+                    onClick={() =>
+                      onChange({ ...draft, frontOnlyStyle: "panelDoorPanel" })
+                    }
+                  >
+                    Panel + door + panel
+                  </ChoiceChip>
+                </ChipRow>
+
+                {draft.frontOnlyStyle === "panelDoor" && (
+                  <>
+                    <ChipRow label="Fixed panel side">
+                      {SIDES.map((opt) => (
+                        <ChoiceChip
+                          key={opt.value}
+                          selected={draft.panelSide === opt.value}
+                          onClick={() =>
+                            onChange({ ...draft, panelSide: opt.value })
+                          }
+                        >
+                          {opt.label}
+                        </ChoiceChip>
+                      ))}
+                    </ChipRow>
+                    <Input
+                      label="Wall to wall (mm)"
+                      type="number"
+                      required
+                      value={draft.w2wMM}
+                      onChange={(e) =>
+                        onChange({ ...draft, w2wMM: e.target.value })
+                      }
+                    />
+                  </>
+                )}
+
+                {draft.frontOnlyStyle === "panelDoorPanel" && (
+                  <>
+                    <ChipRow label="Left panel" columns={5}>
+                      {SIDE_PANEL_PRESETS.map((mm) => (
+                        <ChoiceChip
+                          key={`L-${mm}`}
+                          selected={draft.leftPanelMM === String(mm)}
+                          onClick={() =>
+                            onChange({ ...draft, leftPanelMM: String(mm) })
+                          }
+                          className="px-1.5 text-xs"
+                        >
+                          {mm}
+                        </ChoiceChip>
+                      ))}
+                    </ChipRow>
+                    <ChipRow label="Right panel" columns={5}>
+                      {SIDE_PANEL_PRESETS.map((mm) => (
+                        <ChoiceChip
+                          key={`R-${mm}`}
+                          selected={draft.rightPanelMM === String(mm)}
+                          onClick={() =>
+                            onChange({ ...draft, rightPanelMM: String(mm) })
+                          }
+                          className="px-1.5 text-xs"
+                        >
+                          {mm}
+                        </ChoiceChip>
+                      ))}
+                    </ChipRow>
+                    <p className="text-xs text-slate-500">
+                      Door {draft.isSliding ? "slide" : `${draft.doorMM} mm`},
+                      wall to wall {foW2w || "-"} mm
+                    </p>
+                  </>
+                )}
+              </>
             )}
+
+            {draft.type === "Splayed" && (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <SelectField
+                    label="Wall A (internal)"
+                    value={draft.wallA}
+                    onChange={(e) =>
+                      onChange({ ...draft, wallA: e.target.value })
+                    }
+                  >
+                    {SPLAYED_SIZES.map((s) => (
+                      <option key={s.label} value={String(s.internal)}>
+                        {s.internal} mm → cut {s.cut}
+                      </option>
+                    ))}
+                  </SelectField>
+                  <SelectField
+                    label="Wall B (internal)"
+                    value={draft.wallB}
+                    onChange={(e) =>
+                      onChange({ ...draft, wallB: e.target.value })
+                    }
+                  >
+                    {SPLAYED_SIZES.map((s) => (
+                      <option key={s.label} value={String(s.internal)}>
+                        {s.internal} mm → cut {s.cut}
+                      </option>
+                    ))}
+                  </SelectField>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Measures from the internal corner out. Door fixed at 662 mm.
+                </p>
+              </>
+            )}
+
             {draft.type === "Fixed Panel" && (
-              <Input
-                label="Panel width (mm)"
-                type="number"
-                required
-                value={draft.panelMM}
-                onChange={(e) =>
-                  onChange({ ...draft, panelMM: e.target.value })
-                }
-              />
+              <>
+                <ChipRow label="Fixed style" columns={3}>
+                  {FIXED_STYLES.map((opt) => (
+                    <ChoiceChip
+                      key={opt.value}
+                      selected={draft.fixedStyle === opt.value}
+                      onClick={() =>
+                        onChange({ ...draft, fixedStyle: opt.value })
+                      }
+                      className="px-2 text-xs sm:text-sm"
+                    >
+                      {opt.label}
+                    </ChoiceChip>
+                  ))}
+                </ChipRow>
+                {draft.fixedStyle === "single" && (
+                  <ChipRow label="Panel side">
+                    {SIDES.map((opt) => (
+                      <ChoiceChip
+                        key={opt.value}
+                        selected={draft.panelSide === opt.value}
+                        onClick={() =>
+                          onChange({ ...draft, panelSide: opt.value })
+                        }
+                      >
+                        {opt.label}
+                      </ChoiceChip>
+                    ))}
+                  </ChipRow>
+                )}
+                {draft.fixedStyle === "panelReturn" ? (
+                  <>
+                    <ChipRow label="Return side">
+                      {RETURN_SIDES.map((opt) => (
+                        <ChoiceChip
+                          key={opt.value}
+                          selected={draft.returnSide === opt.value}
+                          onClick={() =>
+                            onChange({ ...draft, returnSide: opt.value })
+                          }
+                        >
+                          {opt.label}
+                        </ChoiceChip>
+                      ))}
+                    </ChipRow>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input
+                        label="Front total (mm)"
+                        type="number"
+                        required
+                        value={draft.frontMM}
+                        onChange={(e) =>
+                          onChange({ ...draft, frontMM: e.target.value })
+                        }
+                      />
+                      <Input
+                        label="Fixed panel (mm)"
+                        type="number"
+                        required
+                        value={draft.panelMM}
+                        onChange={(e) =>
+                          onChange({ ...draft, panelMM: e.target.value })
+                        }
+                      />
+                    </div>
+                    <Input
+                      label="Return (mm)"
+                      type="number"
+                      required
+                      value={draft.returnMM}
+                      onChange={(e) =>
+                        onChange({ ...draft, returnMM: e.target.value })
+                      }
+                    />
+                    <p className="text-xs text-slate-500">
+                      Walk{" "}
+                      {Math.max(
+                        0,
+                        (Number(draft.frontMM) || 0) -
+                          (Number(draft.panelMM) || 0)
+                      ) || "-"}{" "}
+                      mm (front - fixed)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Input
+                      label="Wall to wall (mm)"
+                      type="number"
+                      required
+                      value={draft.w2wMM}
+                      onChange={(e) =>
+                        onChange({ ...draft, w2wMM: e.target.value })
+                      }
+                    />
+                    <Input
+                      label={
+                        draft.fixedStyle === "double"
+                          ? "Each panel width (mm)"
+                          : "Panel width (mm)"
+                      }
+                      type="number"
+                      required
+                      value={draft.panelMM}
+                      onChange={(e) =>
+                        onChange({ ...draft, panelMM: e.target.value })
+                      }
+                    />
+                  </>
+                )}
+              </>
             )}
           </FieldSection>
 
@@ -234,7 +430,7 @@ function ScreenEditor({
           {showDoorOptions && (
             <FieldSection
               title="Door"
-              description="Choose hinged or sliding, then set handing"
+              description="Hinged or sliding, then handing"
             >
               <ChipRow label="Door type">
                 <ChoiceChip
@@ -297,21 +493,61 @@ function ScreenEditor({
               )}
             </FieldSection>
           )}
+
+          {draft.type === "Splayed" && (
+            <FieldSection title="Door" description="Fixed 662 mm door">
+              <ChipRow label="Hinge side">
+                {HINGE_SIDES.map((opt) => (
+                  <ChoiceChip
+                    key={opt.value}
+                    selected={draft.hingeSide === opt.value}
+                    onClick={() =>
+                      onChange({ ...draft, hingeSide: opt.value })
+                    }
+                  >
+                    {opt.label}
+                  </ChoiceChip>
+                ))}
+              </ChipRow>
+              <ChipRow label="Door swing">
+                {SWING_DIRECTIONS.map((opt) => (
+                  <ChoiceChip
+                    key={opt.value}
+                    selected={draft.swingDirection === opt.value}
+                    onClick={() =>
+                      onChange({ ...draft, swingDirection: opt.value })
+                    }
+                  >
+                    {opt.label}
+                  </ChoiceChip>
+                ))}
+              </ChipRow>
+            </FieldSection>
+          )}
         </div>
 
-        {/* Diagram column — first on mobile so builders see the plan early */}
         <div className="order-first bg-slate-50/40 p-4 sm:p-5 lg:order-none lg:sticky lg:top-20 lg:self-start">
           <ScreenDiagram
             type={draft.type}
             frontOnlyStyle={draft.frontOnlyStyle}
+            fixedStyle={draft.fixedStyle}
+            returnSide={draft.returnSide}
+            panelSide={draft.panelSide}
             isSliding={draft.isSliding}
             hingeSide={draft.hingeSide}
             swingDirection={draft.swingDirection}
             angleHeight={draft.angleHeight}
             frontMM={draft.frontMM}
             returnMM={draft.returnMM}
-            w2wMM={draft.w2wMM}
+            w2wMM={
+              draft.frontOnlyStyle === "panelDoorPanel"
+                ? String(foW2w)
+                : draft.w2wMM
+            }
+            leftPanelMM={draft.leftPanelMM}
+            rightPanelMM={draft.rightPanelMM}
             panelMM={draft.panelMM}
+            doorMM={draft.doorMM}
             wallA={draft.wallA}
             wallB={draft.wallB}
           />
@@ -333,7 +569,7 @@ function ScreenEditor({
               {formatMoney(screenPriceExGst(preview))}
             </p>
             <p className="text-xs text-slate-500">
-              ex GST · {formatMoney(preview.priceIncGst)} inc
+              ex GST - {formatMoney(preview.priceIncGst)} inc
             </p>
           </div>
         </div>
@@ -433,7 +669,7 @@ export function OrderForm({
       body: JSON.stringify({
         quoteKind: "order",
         label:
-          jobRef.trim() || `Draft · ${previewScreens.screens.length} screens`,
+          jobRef.trim() || `Draft - ${previewScreens.screens.length} screens`,
         total,
         payload,
       }),

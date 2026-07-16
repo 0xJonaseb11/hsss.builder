@@ -7,14 +7,13 @@ import { getOrder, requireBuilderProfile } from "@/lib/data";
 import { formatMoney } from "@/lib/pricing";
 import {
   screenPriceExGst,
-  type FrontOnlyStyle,
   type OrderPayload,
   type OrderScreenPayload,
 } from "@/lib/orders";
 import { isCustomOrderPayload } from "@/lib/custom-orders";
 import { EMPTY_CELL } from "@/lib/site";
+import type { FixedStyle, HingeSide, Side, SwingDirection } from "@/lib/constants";
 import { ScreenDiagram } from "@/components/screen-diagram";
-import type { HingeSide, SwingDirection } from "@/lib/constants";
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString("en-AU", {
@@ -30,16 +29,20 @@ function isOrderPayload(payload: Record<string, unknown>): payload is OrderPaylo
   return Array.isArray(payload.screens) && "delivery" in payload;
 }
 
+function asSide(value: unknown): Side {
+  return value === "right" ? "right" : "left";
+}
+
+function asFixedStyle(value: unknown): FixedStyle {
+  if (value === "double" || value === "panelReturn") return value;
+  return "single";
+}
+
 function ScreenList({ screens }: { screens: OrderScreenPayload[] }) {
   return (
     <ul className="space-y-4">
       {screens.map((screen, i) => {
         const config = screen.config;
-        const showDiagram =
-          screen.type === "Front & Return" ||
-          screen.type === "Front Only" ||
-          screen.type === "Splayed" ||
-          screen.type === "Fixed Panel";
         return (
           <li
             key={`${screen.summary}-${i}`}
@@ -59,52 +62,68 @@ function ScreenList({ screens }: { screens: OrderScreenPayload[] }) {
                   </span>
                 </p>
               </div>
-              {showDiagram && (
-                <div className="w-full max-w-xs shrink-0">
-                  <ScreenDiagram
-                    type={screen.type}
-                    frontOnlyStyle={
-                      (config.style as FrontOnlyStyle) ?? "panelDoor"
-                    }
-                    isSliding={Boolean(config.isSliding)}
-                    hingeSide={
-                      (config.hingeSide as HingeSide) === "right"
-                        ? "right"
-                        : "left"
-                    }
-                    swingDirection={
-                      (config.swingDirection as SwingDirection) === "in"
-                        ? "in"
-                        : "out"
-                    }
-                    angleHeight={
-                      config.angleHeight != null
-                        ? String(config.angleHeight)
-                        : undefined
-                    }
-                    frontMM={
-                      config.frontMM != null ? String(config.frontMM) : undefined
-                    }
-                    returnMM={
-                      config.returnMM != null
-                        ? String(config.returnMM)
-                        : undefined
-                    }
-                    w2wMM={
-                      config.w2wMM != null ? String(config.w2wMM) : undefined
-                    }
-                    panelMM={
-                      config.panelMM != null ? String(config.panelMM) : undefined
-                    }
-                    wallA={
-                      config.wallA != null ? String(config.wallA) : undefined
-                    }
-                    wallB={
-                      config.wallB != null ? String(config.wallB) : undefined
-                    }
-                  />
-                </div>
-              )}
+              <div className="w-full max-w-xs shrink-0">
+                <ScreenDiagram
+                  type={screen.type}
+                  frontOnlyStyle={
+                    config.style === "panelDoorPanel"
+                      ? "panelDoorPanel"
+                      : "panelDoor"
+                  }
+                  fixedStyle={asFixedStyle(config.fixedStyle)}
+                  returnSide={asSide(config.returnSide)}
+                  panelSide={asSide(config.panelSide)}
+                  isSliding={Boolean(config.isSliding)}
+                  hingeSide={
+                    (config.hingeSide as HingeSide) === "right"
+                      ? "right"
+                      : "left"
+                  }
+                  swingDirection={
+                    (config.swingDirection as SwingDirection) === "in"
+                      ? "in"
+                      : "out"
+                  }
+                  angleHeight={
+                    config.angleHeight != null
+                      ? String(config.angleHeight)
+                      : undefined
+                  }
+                  frontMM={
+                    config.frontMM != null ? String(config.frontMM) : undefined
+                  }
+                  returnMM={
+                    config.returnMM != null
+                      ? String(config.returnMM)
+                      : undefined
+                  }
+                  w2wMM={
+                    config.w2wMM != null ? String(config.w2wMM) : undefined
+                  }
+                  leftPanelMM={
+                    config.leftPanelMM != null
+                      ? String(config.leftPanelMM)
+                      : undefined
+                  }
+                  rightPanelMM={
+                    config.rightPanelMM != null
+                      ? String(config.rightPanelMM)
+                      : undefined
+                  }
+                  panelMM={
+                    config.panelMM != null ? String(config.panelMM) : undefined
+                  }
+                  doorMM={
+                    config.doorMM != null ? String(config.doorMM) : undefined
+                  }
+                  wallA={
+                    config.wallA != null ? String(config.wallA) : undefined
+                  }
+                  wallB={
+                    config.wallB != null ? String(config.wallB) : undefined
+                  }
+                />
+              </div>
             </div>
           </li>
         );

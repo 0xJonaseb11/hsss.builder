@@ -20,13 +20,12 @@ export const COLOURS = [
   "Brushed Brass",
 ] as const;
 
-//  Shower angle / waterstop height options (mm)
 export const ANGLE_HEIGHTS = ["21", "42", "60"] as const;
 export type AngleHeight = (typeof ANGLE_HEIGHTS)[number];
 
 export const HINGE_SIDES = [
-  { value: "left", label: "Hinge left" },
-  { value: "right", label: "Hinge right" },
+  { value: "left", label: "Hinge off LHS" },
+  { value: "right", label: "Hinge off RHS" },
 ] as const;
 export type HingeSide = (typeof HINGE_SIDES)[number]["value"];
 
@@ -36,14 +35,39 @@ export const SWING_DIRECTIONS = [
 ] as const;
 export type SwingDirection = (typeof SWING_DIRECTIONS)[number]["value"];
 
+export const SIDES = [
+  { value: "left", label: "Panel LHS" },
+  { value: "right", label: "Panel RHS" },
+] as const;
+export type Side = (typeof SIDES)[number]["value"];
+
+export const RETURN_SIDES = [
+  { value: "left", label: "LH return" },
+  { value: "right", label: "RH return" },
+] as const;
+
+export const FIXED_STYLES = [
+  { value: "single", label: "Single panel" },
+  { value: "double", label: "Two panels" },
+  { value: "panelReturn", label: "Panel + return" },
+] as const;
+export type FixedStyle = (typeof FIXED_STYLES)[number]["value"];
+
+export const SIDE_PANEL_PRESETS = [250, 350, 450, 550, 700] as const;
+
 export const AU_STATES = ["QLD", "NSW", "VIC", "SA", "WA", "TAS", "NT", "ACT"] as const;
 
 export const SPLAYED_SIZES = [
-  { label: "9", internal: 900, leg: 425 },
-  { label: "10", internal: 1000, leg: 525 },
-  { label: "11", internal: 1100, leg: 625 },
-  { label: "12", internal: 1200, leg: 725 },
+  { label: "9", internal: 900, cut: 425 },
+  { label: "10", internal: 1000, cut: 525 },
+  { label: "11", internal: 1100, cut: 625 },
+  { label: "12", internal: 1200, cut: 725 },
 ] as const;
+
+export function splayedCutForInternal(internal: number): number | null {
+  const match = SPLAYED_SIZES.find((s) => s.internal === internal);
+  return match?.cut ?? null;
+}
 
 export type QuickScreenKey =
   | "frontReturn"

@@ -79,16 +79,18 @@ export function ChipRow({
 }: Readonly<{
   label: string;
   children: ReactNode;
-  columns?: 2 | 3;
+  columns?: 2 | 3 | 5;
 }>) {
+  const gridClass =
+    columns === 5
+      ? "grid-cols-5"
+      : columns === 3
+        ? "grid-cols-3"
+        : "grid-cols-2";
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
-      <div
-        className={`grid gap-2 ${columns === 3 ? "grid-cols-3" : "grid-cols-2"}`}
-      >
-        {children}
-      </div>
+      <div className={`grid gap-2 ${gridClass}`}>{children}</div>
     </div>
   );
 }
